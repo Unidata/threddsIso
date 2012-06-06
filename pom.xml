@@ -1,0 +1,273 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>EDS</groupId>
+  <artifactId>threddsIso</artifactId>
+  <packaging>jar</packaging>
+  <version>2.0.2</version>
+  <repositories>
+    	
+        <repository>
+            <id>ibiblio-mirror</id>
+            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+        </repository>
+      
+  </repositories>   
+
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.4</version>
+  		<scope>test</scope>
+  	</dependency>  	  
+    <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.5</version>
+        <scope>test</scope>
+    </dependency>  	  	
+  	<dependency>
+  		<groupId>tomcat</groupId>
+  		<artifactId>servlet-api</artifactId>
+  		<version>5.5.23</version>
+  		<scope>provided</scope>
+  	</dependency>	  	  	  	  	   	   		  	  	
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>core</artifactId>
+  		<version>2.5.6</version>
+  		<scope>provided</scope>
+  	</dependency>  
+	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>webmvc</artifactId>
+  		<version>2.5.6</version>
+  		<scope>provided</scope>
+  	</dependency> 
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-test</artifactId>
+  		<version>2.5.6</version>
+  		<scope>provided</scope>
+  	</dependency>  
+  	<dependency>
+  		<groupId>edu.ucar</groupId>
+  		<artifactId>netcdf</artifactId>
+  		<version>4.2</version>
+  		<scope>provided</scope>
+  	</dependency>  	
+  	<dependency>
+  		<groupId>edu.ucar</groupId>
+  		<artifactId>thredds</artifactId>
+  		<version>4.2</version>
+  		<scope>provided</scope>
+  	</dependency>   	
+  	<dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.15</version>
+		<scope>provided</scope>            
+    </dependency>  	
+  	<dependency>
+  		<groupId>org.apache</groupId>
+  		<artifactId>commons-logging</artifactId>
+  		<version>1.1.1</version>
+  		<scope>provided</scope>
+  	</dependency>    	
+
+	<dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.3</version>
+		<scope>provided</scope>
+    </dependency>	 
+      	<dependency>  	
+		<groupId>org.jdom</groupId>
+		<artifactId>jdom</artifactId>
+		<version>1.1</version>
+		<scope>provided</scope>
+	</dependency>
+ 	<dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-he</artifactId>
+        <version>9.3.0.5</version>
+        <type>jar</type>
+        <scope>provided</scope>
+    </dependency>    
+	<dependency>
+		<groupId>jaxen</groupId>
+		<artifactId>jaxen</artifactId>
+		<version>1.1.1</version>
+		<type>jar</type>
+		<scope>provided</scope>
+	</dependency>		  	
+	<dependency>  	
+		<groupId>edu.ucar.unidata.dependencies</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>1.5.6</version>
+		<scope>provided</scope>
+	</dependency> 
+  	<dependency>  	
+		<groupId>edu.ucar.unidata.dependencies</groupId>
+		<artifactId>slf4j-jdk14</artifactId>
+		<version>1.5.6</version>
+		<scope>provided</scope>
+	</dependency>
+  	<dependency>  	
+		<groupId>edu.ucar.unidata.dependencies</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>3.1</version>
+		<scope>provided</scope>
+	</dependency> 		 		
+	
+  </dependencies> 
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/dev</directory>
+          </resource>
+          <resource>
+            <directory>src/main/resources/xsl/nciso</directory>     
+            <targetPath>resources/xsl/nciso</targetPath>          
+          </resource>	          
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/prod</directory>
+          </resource>
+          <resource>
+            <directory>src/main/resources/xsl/nciso</directory>         
+            <targetPath>resources/xsl/nciso</targetPath>   
+          </resource>	          
+        </resources>
+      </build>
+    </profile>
+  </profiles>        
+  <build>
+    <plugins>
+        <!-- The most recent xslts are much smaller meaning that Xalan 2.7.1 is not currently needed  
+         However, allowing for flexibility that they may grow in size again we leave them in the pom for now.   
+    
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>      
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id> 
+            <phase>package</phase> 
+            <goals>
+              <goal>single</goal> 
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      -->
+      <plugin>
+      <!-- Separates the unit tests from the integration tests. -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+           <!-- Skip the default running of this plug-in (or everything is run twice...see below) -->
+           <skip>true</skip>
+           <!-- Show 100% of the lines from the stack trace (doesn't work) -->
+           <trimStackTrace>false</trimStackTrace>
+        </configuration>
+        <executions>
+          <execution>
+          <id>unit-tests</id>
+          <phase>test</phase>
+          <goals>
+             <goal>test</goal>
+          </goals>
+          <configuration>
+            <!-- Never skip running the tests when the test phase is invoked -->
+            <skip>false</skip>
+            <includes>
+              <!-- Include unit tests within integration-test phase. -->
+              <include>**/*Tests.java</include>
+            </includes>
+            <excludes>
+              <!-- Exclude integration tests within (unit) test phase. -->
+              <exclude>**/*IntegrationTests.java</exclude>
+            </excludes>
+         </configuration>
+         </execution>
+         <execution>
+          <id>integration-tests</id>
+          <phase>integration-test</phase>
+          
+          <goals>
+             <goal>test</goal>
+          </goals>
+          <configuration>
+            <!-- Never skip running the tests when the integration-test phase is invoked -->
+             <skip>false</skip>
+             <includes>
+               <!-- Include integration tests within integration-test phase. -->
+               <include>**/*IntegrationTests.java</include>
+             </includes>
+          </configuration>
+          </execution>
+        </executions>
+      </plugin>
+       
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>       
+      <plugin>  
+      <groupId>org.apache.maven.plugins</groupId>  
+      <artifactId>maven-antrun-plugin</artifactId>  
+
+      <executions>  
+        <execution>  
+        <id>process-resources</id>  
+        <phase>process-resources</phase>  
+        <configuration>  
+        <tasks>             
+        </tasks>
+        </configuration>  
+        <goals>  
+        <goal>run</goal>       
+        </goals>  
+        </execution>        
+        
+        <execution>  
+        <id>package</id>  
+        <phase>package</phase>  
+        <configuration>  
+        <tasks>  
+
+        </tasks>
+        </configuration>  
+        <goals>  
+        <goal>run</goal>  
+        </goals>  
+        </execution>         
+     </executions>  
+
+     </plugin>        
+    </plugins>
+
+  </build>  
+</project>
