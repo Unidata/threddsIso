@@ -57,11 +57,11 @@ public class DatasetHandlerAdapter {
 	* @return dataset a NetcdfDataset as specified in the request
 	*/
 	public static NetcdfDataset openDataset(final HttpServletRequest req,
-			final HttpServletResponse res) throws Exception {
+			final HttpServletResponse res, String datasetPath) throws Exception {
 
 		NetcdfFile netcdfFile = null;
 		NetcdfDataset dataset = null;
-		String datasetPath = req.getPathInfo();
+		//String datasetPath = req.getPathInfo();
 
 		if (datasetPath == null) { // passing in a dataset URL, presumably
 			// opendap

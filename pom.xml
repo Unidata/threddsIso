@@ -4,7 +4,7 @@
   <groupId>EDS</groupId>
   <artifactId>threddsIso</artifactId>
   <packaging>jar</packaging>
-  <version>2.2.2</version>
+  <version>2.2.2-SNAPSHOT</version>
   <repositories>
     	
         <repository>
@@ -15,113 +15,48 @@
   </repositories>   
 
   <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.4</version>
-  		<scope>test</scope>
-  	</dependency>  	  
     <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>1.5</version>
-        <scope>test</scope>
-    </dependency>  	  	
-  	<dependency>
-  		<groupId>tomcat</groupId>
-  		<artifactId>servlet-api</artifactId>
-  		<version>5.5.23</version>
-  		<scope>provided</scope>
-  	</dependency>	  	  	  	  	   	   		  	  	
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>core</artifactId>
-  		<version>2.5.6</version>
-  		<scope>provided</scope>
-  	</dependency>  
-	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>webmvc</artifactId>
-  		<version>2.5.6</version>
-  		<scope>provided</scope>
-  	</dependency> 
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>spring-test</artifactId>
-  		<version>2.5.6</version>
-  		<scope>provided</scope>
-  	</dependency>  
-  	<dependency>
-  		<groupId>edu.ucar</groupId>
-  		<artifactId>netcdf</artifactId>
-  		<version>4.2</version>
-  		<scope>provided</scope>
-  	</dependency>  	
-  	<dependency>
-  		<groupId>edu.ucar</groupId>
-  		<artifactId>thredds</artifactId>
-  		<version>4.2</version>
-  		<scope>provided</scope>
-  	</dependency>   	
-  	<dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.15</version>
-		<scope>provided</scope>            
-    </dependency>  	
-  	<dependency>
-  		<groupId>org.apache</groupId>
-  		<artifactId>commons-logging</artifactId>
-  		<version>1.1.1</version>
-  		<scope>provided</scope>
-  	</dependency>    	
-
-	<dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.3</version>
-		<scope>provided</scope>
-    </dependency>	 
-      	<dependency>  	
-		<groupId>org.jdom</groupId>
-		<artifactId>jdom</artifactId>
-		<version>1.1</version>
-		<scope>provided</scope>
-	</dependency>
- 	<dependency>
-        <groupId>net.sf.saxon</groupId>
-        <artifactId>saxon-he</artifactId>
-        <version>9.3.0.5</version>
-        <type>jar</type>
-        <scope>provided</scope>
-    </dependency>    
-	<dependency>
-		<groupId>jaxen</groupId>
-		<artifactId>jaxen</artifactId>
-		<version>1.1.1</version>
-		<type>jar</type>
-		<scope>provided</scope>
-	</dependency>		  	
-	<dependency>  	
-		<groupId>edu.ucar.unidata.dependencies</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>1.5.6</version>
-		<scope>provided</scope>
-	</dependency> 
-  	<dependency>  	
-		<groupId>edu.ucar.unidata.dependencies</groupId>
-		<artifactId>slf4j-jdk14</artifactId>
-		<version>1.5.6</version>
-		<scope>provided</scope>
-	</dependency>
-  	<dependency>  	
-		<groupId>edu.ucar.unidata.dependencies</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>3.1</version>
-		<scope>provided</scope>
-	</dependency> 		 		
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- dependency>
+    	<groupId>edu.ucar</groupId>
+    	<artifactId>netcdf</artifactId>
+    	<version>4.3.11-SNAPSHOT</version>
+    </dependency-->
+    <dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>javax.servlet-api</artifactId>
+    	<version>3.0.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>edu.ucar</groupId>
+    	<artifactId>tds</artifactId>
+    	<version>4.3.11-SNAPSHOT</version>
+    	<classifier>classes</classifier>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>commons-lang</groupId>
+    	<artifactId>commons-lang</artifactId>
+    	<version>2.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-core</artifactId>
+    	<version>3.1.1.RELEASE</version>
+    </dependency>
+    <dependency>
+    	<groupId>net.sf.saxon</groupId>
+    	<artifactId>saxon</artifactId>
+    	<version>8.7</version>
+    </dependency>
+  </dependencies> 		 		
 	
-  </dependencies> 
+
   <profiles>
     <profile>
       <id>dev</id>
@@ -185,6 +120,8 @@
         <configuration>
            <!-- Skip the default running of this plug-in (or everything is run twice...see below) -->
            <skip>true</skip>
+           <!-- Skipping tests at all -->
+           <skipTests>true</skipTests>
            <!-- Show 100% of the lines from the stack trace (doesn't work) -->
            <trimStackTrace>false</trimStackTrace>
         </configuration>

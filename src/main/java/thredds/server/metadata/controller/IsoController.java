@@ -28,20 +28,6 @@
  */
 package thredds.server.metadata.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
-import thredds.catalog.InvDataset;
-import thredds.server.metadata.exception.ThreddsUtilitiesException;
-import thredds.server.metadata.service.EnhancedMetadataService;
-import thredds.server.metadata.util.DatasetHandlerAdapter;
-import thredds.server.metadata.util.ThreddsTranslatorUtil;
-import thredds.servlet.ThreddsConfig;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +35,20 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import thredds.catalog.InvDataset;
+import thredds.server.metadata.exception.ThreddsUtilitiesException;
+import thredds.server.metadata.service.EnhancedMetadataService;
+import thredds.server.metadata.util.DatasetHandlerAdapter;
+import thredds.server.metadata.util.ThreddsTranslatorUtil;
+import thredds.servlet.ThreddsConfig;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -58,8 +57,8 @@ import ucar.nc2.dataset.NetcdfDataset;
  * <p/>
  */
 @Controller
-@RequestMapping("/iso")
-public class IsoController extends AbstractMetadataController {
+@RequestMapping("/iso/")
+public class IsoController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 	    .getLogger(IsoController.class);
 
@@ -67,8 +66,10 @@ public class IsoController extends AbstractMetadataController {
 		return _metadataServiceType + "/";
 	}
 	
-	public void init() throws ServletException {
-		_metadataServiceType = "ISO"; 
+	//public void init() throws ServletException {
+	public void afterPropertiesSet() throws ServletException {	
+		_metadataServiceType = "ISO";
+		_servletPath = "/iso";
 		_logServerStartup.info("Metadata ISO - initialization start");
 		_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
 	    _logServerStartup.info("NCISO.isoAllow = "+ _allow);	
@@ -89,7 +90,7 @@ public class IsoController extends AbstractMetadataController {
 	* @throws ServletException if ServletException occurred
 	* @throws IOException if IOException occurred 
 	*/	
-	@RequestMapping(params = {})
+	@RequestMapping(value="**",params = {})
 	public void handleMetadataRequest(final HttpServletRequest req,
 			final HttpServletResponse res) throws ServletException, IOException {
 		_log.info("Handling ISO metadata request.");
@@ -97,9 +98,13 @@ public class IsoController extends AbstractMetadataController {
 		NetcdfDataset netCdfDataset = null;
 
 		try {
+			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
+			//Workaround for now...
+			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
+			
 			isAllowed(_allow, _metadataServiceType, res);
 			res.setContentType("text/xml");
-			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res);
+			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,
 						"ThreddsIso Extension: Requested resource not found.");

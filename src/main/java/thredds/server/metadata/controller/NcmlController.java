@@ -28,21 +28,21 @@
  */
 package thredds.server.metadata.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.io.IOException;
+import java.io.Writer;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import thredds.catalog.InvDataset;
 import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.servlet.ThreddsConfig;
-
-import java.io.IOException;
-import java.io.Writer;
-
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -52,7 +52,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 @Controller
 @RequestMapping("/ncml")
-public class NcmlController extends AbstractMetadataController {
+public class NcmlController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 	    .getLogger(NcmlController.class);
 	
@@ -60,8 +60,10 @@ public class NcmlController extends AbstractMetadataController {
 		return _metadataServiceType + "/";
 	}
 
-	public void init() throws ServletException {
-		_metadataServiceType = "NCML"; 
+	//public void init() throws ServletException {
+	public void afterPropertiesSet() throws ServletException {
+		_metadataServiceType = "NCML";
+		_servletPath = "/ncml";
 		_logServerStartup.info("Metadata NCML - initialization start");
 		_allow = ThreddsConfig.getBoolean("NCISO.ncmlAllow", false);
 	    _logServerStartup.info("NCISO.ncmlAllow = "+ _allow);
@@ -79,8 +81,8 @@ public class NcmlController extends AbstractMetadataController {
 	* @param response outgoing web based response
 	* @throws ServletException if ServletException occurred
 	* @throws IOException if IOException occurred  
-	*/	
-	@RequestMapping(params = {})
+	*/		
+	@RequestMapping(value="/**",params = {})
 	public void handleMetadataRequest(final HttpServletRequest req,
 			final HttpServletResponse res) throws ServletException, IOException {
 		_log.info("Handling NCML metadata request.");
@@ -88,9 +90,13 @@ public class NcmlController extends AbstractMetadataController {
 		NetcdfDataset netCdfDataset = null;
 
 		try {
+			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
+			//Workaround for now...
+			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);			
+			
 			isAllowed(_allow, _metadataServiceType, res);
 			res.setContentType("text/xml");
-			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res);
+			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,
 						"ThreddsIso Extension: Requested resource not found.");

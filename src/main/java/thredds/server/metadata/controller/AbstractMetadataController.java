@@ -26,6 +26,7 @@ public abstract class AbstractMetadataController implements ServletContextAware,
 
     protected boolean _allow = false;	
     protected String _metadataServiceType = "";
+    protected String _servletPath = "";  
 
 	protected ServletContext sc; 
 	protected File xslFile;
@@ -133,6 +134,14 @@ public abstract class AbstractMetadataController implements ServletContextAware,
         } 
         
     }   
+    
+    protected abstract String getPath();
+
+    protected String getInfoPath( HttpServletRequest req ){
+	    String servletPath = req.getServletPath();	  
+	    String pathInfo = servletPath.substring(   getPath().length(), servletPath.length() );
+	    return pathInfo;
+    }
     
 
 }

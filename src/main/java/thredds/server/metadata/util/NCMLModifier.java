@@ -51,7 +51,7 @@ import ucar.nc2.constants.FeatureType;
 import ucar.nc2.units.DateRange;
 import ucar.nc2.units.DateType;
 import ucar.nc2.units.TimeDuration;
-import ucar.unidata.util.StringUtil;
+import ucar.unidata.util.StringUtil2;
 
 /**
  * NCMLModifier
@@ -156,34 +156,34 @@ public class NCMLModifier {
 		if ((ids.getDataFormatType() != null)
 				&& (ids.getDataFormatType() != DataFormatType.NONE))
 			addElem(groupElem, "data_format_type",
-					StringUtil.quoteHtmlContent(ids.getDataFormatType()
+					StringUtil2.quoteHtmlContent(ids.getDataFormatType()
 							.toString()));
 		if ((ids.getDataType() != null)
 				&& (ids.getDataType() != FeatureType.ANY)
 				&& (ids.getDataType() != FeatureType.NONE))
 			addElem(groupElem, "data_type",
-					StringUtil.quoteHtmlContent(ids.getDataType().toString()));
+					StringUtil2.quoteHtmlContent(ids.getDataType().toString()));
 		if ((ids.getCollectionType() != null)
 				&& (ids.getCollectionType() != CollectionType.NONE))
 			addElem(groupElem, "collection_type",
-					StringUtil.quoteXmlContent(ids.getCollectionType()
+					StringUtil2.quoteXmlContent(ids.getCollectionType()
 							.toString()));
 		if (ids.getAuthority() != null)
 			addElem(groupElem, "authority",
-					StringUtil.quoteXmlContent(ids.getAuthority()));
+					StringUtil2.quoteXmlContent(ids.getAuthority()));
 
 		java.util.List<InvDocumentation> docs = ids.getDocumentation();
 		if (docs.size() > 0) {
 			Element docsGrp = doAddGroupElem(groupElem, "documentation");
 			for (InvDocumentation doc : docs) {
 				Element docGrp = doAddGroupElem(docsGrp, "document");
-				String type = (doc.getType() == null) ? "" : StringUtil
+				String type = (doc.getType() == null) ? "" : StringUtil2
 						.quoteXmlContent(doc.getType());
 				String inline = doc.getInlineContent();
 				String xlink = null;
 				String xlinkTitle = null;
 				if ((inline != null) && (inline.length() > 0))
-					inline = StringUtil.quoteXmlContent(inline);
+					inline = StringUtil2.quoteXmlContent(inline);
 				addElem(docGrp, "inline", inline, type);
 				if (doc.hasXlink()) {
 					xlink = doc.getXlinkHref();
@@ -239,10 +239,10 @@ public class NCMLModifier {
 			for (ThreddsMetadata.Contributor t : contributors) {
 				Element contributorGrp = doAddGroupElem(contributorsGrp,
 						"contributor");
-				String role = (t.getRole() == null) ? "" : StringUtil
+				String role = (t.getRole() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getRole());
 				addElem(contributorGrp, "role", role);
-				String name = (t.getName() == null) ? "" : StringUtil
+				String name = (t.getName() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getName());
 				addElem(contributorGrp, "name", name);
 			}
@@ -252,9 +252,9 @@ public class NCMLModifier {
 		if (keywords.size() > 0) {
 			Element keywordsGrp = doAddGroupElem(groupElem, "keywords");
 			for (ThreddsMetadata.Vocab t : keywords) {
-				String vocab = (t.getVocabulary() == null) ? "" : StringUtil
+				String vocab = (t.getVocabulary() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getVocabulary());
-				String text = StringUtil.quoteXmlContent(t.getText());
+				String text = StringUtil2.quoteXmlContent(t.getText());
 				addElem(keywordsGrp, "keyword", text);
 				if (!vocab.equals(""))
 					addElem(keywordsGrp, "vocab", vocab);
@@ -265,9 +265,9 @@ public class NCMLModifier {
 		if (dates.size() > 0) {
 			Element datesGrp = doAddGroupElem(groupElem, "dates");
 			for (DateType d : dates) {
-				String type = (d.getType() == null) ? "" : StringUtil
+				String type = (d.getType() == null) ? "" : StringUtil2
 						.quoteXmlContent(d.getType());
-				String text = StringUtil.quoteXmlContent(d.getText());
+				String text = StringUtil2.quoteXmlContent(d.getText());
 				addElem(datesGrp, "date", text, type);
 			}
 		}
@@ -276,9 +276,9 @@ public class NCMLModifier {
 		if (projects.size() > 0) {
 			Element projectsGrp = doAddGroupElem(groupElem, "projects");
 			for (ThreddsMetadata.Vocab t : projects) {
-				String vocab = (t.getVocabulary() == null) ? "" : StringUtil
+				String vocab = (t.getVocabulary() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getVocabulary());
-				String text = StringUtil.quoteXmlContent(t.getText());
+				String text = StringUtil2.quoteXmlContent(t.getText());
 				addElem(projectsGrp, "project", text);
 				if (!vocab.equals(""))
 					addElem(projectsGrp, "vocab", vocab);
@@ -290,8 +290,8 @@ public class NCMLModifier {
 			Element creatorsGrp = doAddGroupElem(groupElem, "creators");
 			for (ThreddsMetadata.Source t : creators) {
 				Element creatorGrp = doAddGroupElem(creatorsGrp, "creator");
-				String name = StringUtil.quoteXmlContent(t.getName());
-				String email = StringUtil.quoteXmlContent(t.getEmail());
+				String name = StringUtil2.quoteXmlContent(t.getName());
+				String email = StringUtil2.quoteXmlContent(t.getEmail());
 				String url = (t.getUrl() != null) ? "" : t.getUrl();
 				addElem(creatorGrp, "name", name);
 				addElem(creatorGrp, "email", email);
@@ -305,8 +305,8 @@ public class NCMLModifier {
 			for (ThreddsMetadata.Source t : publishers) {
 				Element publisherGrp = doAddGroupElem(publishersGrp,
 						"publisher");
-				String name = StringUtil.quoteXmlContent(t.getName());
-				String email = StringUtil.quoteXmlContent(t.getEmail());
+				String name = StringUtil2.quoteXmlContent(t.getName());
+				String email = StringUtil2.quoteXmlContent(t.getEmail());
 				String url = (t.getUrl() != null) ? "" : t.getUrl();
 				addElem(publisherGrp, "name", name);
 				addElem(publisherGrp, "email", email);
@@ -366,7 +366,7 @@ public class NCMLModifier {
 				Element vocabGrp = doAddGroupElem(groupElem, "vocab");
 				for (ThreddsMetadata.Vocab elem : nlist) {
 					addElem(vocabGrp, "name",
-							StringUtil.quoteXmlContent(elem.getText()));
+							StringUtil2.quoteXmlContent(elem.getText()));
 				}
 			}
 		}
@@ -386,12 +386,12 @@ public class NCMLModifier {
 			if (tc.useResolution() && (resolution != null)
 					&& !resolution.isBlank()) {
 				addElem(groupElem, "time_coverage_resolution",
-						StringUtil.quoteXmlContent(resolution.toString()));
+						StringUtil2.quoteXmlContent(resolution.toString()));
 			}
 			TimeDuration duration = tc.getDuration();
 			if (tc.useDuration() && (duration != null) && !duration.isBlank()) {
 				addElem(groupElem, "time_coverage_duration",
-						StringUtil.quoteXmlContent(duration.toString()));
+						StringUtil2.quoteXmlContent(duration.toString()));
 			}
 
 		}
