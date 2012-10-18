@@ -118,8 +118,8 @@ public abstract class AbstractMetadataController implements ServletContextAware,
         	  String nestedDataset = invDatasetString.substring((invDatasetString.lastIndexOf("/")+1), invDatasetString.length());
         	  //then look up the individual nested dataset using 
         	  InvDataset nds = ids.findDatasetByName(nestedDataset);
-        	  _log.debug("nestedDataset name: " + nestedDataset);
-        	  return nds;
+        	  _log.debug("nestedDataset name: " + nestedDataset);        	  
+        	  return  nds != null ? nds : ids;
           }
           
           return ids;

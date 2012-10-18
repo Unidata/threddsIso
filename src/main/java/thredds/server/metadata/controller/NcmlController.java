@@ -51,7 +51,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * <p/>
  */
 @Controller
-@RequestMapping("/ncml")
+@RequestMapping("/ncml/**")
 public class NcmlController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 	    .getLogger(NcmlController.class);

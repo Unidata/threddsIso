@@ -57,7 +57,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * <p/>
  */
 @Controller
-@RequestMapping("/uddc")
+@RequestMapping("/uddc/**")
 public class UddcController extends AbstractMetadataController implements InitializingBean{
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 		    .getLogger(UddcController.class);
