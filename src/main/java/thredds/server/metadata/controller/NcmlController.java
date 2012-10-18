@@ -51,7 +51,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * <p/>
  */
 @Controller
-@RequestMapping("/ncml/**")
+@RequestMapping("/ncml/")
 public class NcmlController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 	    .getLogger(NcmlController.class);
@@ -82,7 +82,7 @@ public class NcmlController extends AbstractMetadataController implements Initia
 	* @throws ServletException if ServletException occurred
 	* @throws IOException if IOException occurred  
 	*/		
-	@RequestMapping(value="/**",params = {})
+	@RequestMapping(value="**",params = {})
 	public void handleMetadataRequest(final HttpServletRequest req,
 			final HttpServletResponse res) throws ServletException, IOException {
 		_log.info("Handling NCML metadata request.");
