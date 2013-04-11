@@ -2,3 +2,4 @@ target/
 
 # Ignore IntelliJ IDEA project files
 intelliJ/
+.idea/
