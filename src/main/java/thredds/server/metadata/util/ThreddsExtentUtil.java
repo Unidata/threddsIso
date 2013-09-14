@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.apache.log4j.Logger;
 
 import thredds.server.metadata.bean.Extent;
 import ucar.ma2.Array;
@@ -52,7 +51,7 @@ import ucar.nc2.units.DateUnit;
  * @author: dneufeld Date: June 17, 2010
  */
 public class ThreddsExtentUtil {
-	private static Logger _log = Logger.getLogger(ThreddsExtentUtil.class);
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(ThreddsExtentUtil.class);
 
 	private static Extent doGetExtent(final String url) throws Exception {
 		Extent ext = null;

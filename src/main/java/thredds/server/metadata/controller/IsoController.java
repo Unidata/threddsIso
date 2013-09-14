@@ -59,8 +59,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 @Controller
 @RequestMapping("/iso/")
 public class IsoController extends AbstractMetadataController implements InitializingBean {
-	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
-	    .getLogger(IsoController.class);
+	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(IsoController.class);
 
 	protected String getPath() {
 		return _metadataServiceType + "/";
@@ -85,8 +84,8 @@ public class IsoController extends AbstractMetadataController implements Initial
 	/** 
 	* Generate ISO 19115 metadata for the underlying NetcdfDataset
 	* 
-	* @param request incoming url request 
-	* @param response outgoing web based response
+	* @param req incoming url request
+	* @param res outgoing web based response
 	* @throws ServletException if ServletException occurred
 	* @throws IOException if IOException occurred 
 	*/	

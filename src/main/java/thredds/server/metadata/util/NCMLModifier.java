@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -59,7 +58,7 @@ import ucar.unidata.util.StringUtil2;
  * @author: dneufeld Date: Jun 6, 2010
  */
 public class NCMLModifier {
-	private static Logger logger = Logger.getLogger(NCMLModifier.class);
+  static private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NCMLModifier.class);
 	private String _openDapService = null;
 	private String _version = "2.2.2";
 
@@ -74,9 +73,9 @@ public class NCMLModifier {
 	 * Update the NCML document by calculating Data Discovery elements using CF
 	 * conventions wherever possible.
 	 * 
-	 * @param extent
+	 * @param ext
 	 *            the geospatial extent of the NetCDF file
-	 * @param element
+	 * @param groupElem
 	 *            the root XML element of the NCML document
 	 */
 	public void addCFMetadata(final Extent ext, final Element groupElem) {
@@ -142,7 +141,7 @@ public class NCMLModifier {
 	 * 
 	 * @param ids
 	 *            the THREDDS dataset object retrieved from the catalog
-	 * @param element
+	 * @param groupElem
 	 *            the root XML element of the NCML document
 	 */
 	public void addThreddsMetadata(final InvDataset ids, final Element groupElem)
@@ -430,7 +429,7 @@ public class NCMLModifier {
 	/**
 	 * Update the NCML document by adding ncISO specific metadata
 	 * 
-	 * @param element
+	 * @param groupElem
 	 *            the group XML element of the NCML document
 	 */
 	public void addNcIsoMetadata(final Element groupElem) {

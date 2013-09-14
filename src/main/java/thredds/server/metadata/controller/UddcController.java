@@ -30,7 +30,6 @@ package thredds.server.metadata.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -85,14 +84,12 @@ public class UddcController extends AbstractMetadataController implements Initia
 	/** 
 	* Generate a report on quality of the metadata for the underlying NetcdfDataset
 	* 
-	* @param request incoming url request 
-	* @param response outgoing web based response
+	* @param req incoming url request
+	* @param res outgoing web based response
 	* @throws ServletException if ServletException occurred
-	* @throws IOException if IOException occurred  
-	*/	
+	*/
 	@RequestMapping(value="**", params = {})
-	public void handleMetadataRequest(final HttpServletRequest req,
-			final HttpServletResponse res) throws ServletException {
+	public void handleMetadataRequest(final HttpServletRequest req, final HttpServletResponse res) throws ServletException {
 		_log.info("Handling UDDC metadata request.");
 
 		NetcdfDataset netCdfDataset = null;
@@ -119,8 +116,7 @@ public class UddcController extends AbstractMetadataController implements Initia
 				writer.close();
 				
 				
-				InputStream is = new ByteArrayInputStream(
-						ncml.getBytes("UTF-8"));
+				InputStream is = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
 			
 				ThreddsTranslatorUtil.transform(xslFile, is, res.getWriter());
 				

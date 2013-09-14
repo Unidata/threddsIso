@@ -42,7 +42,6 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -52,8 +51,8 @@ import org.jdom.Element;
 * Date: Jul 19, 2010
 */	
 public class EnhancedMetadataService {
-	private static Logger _log = Logger.getLogger(EnhancedMetadataService.class);
-	
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(EnhancedMetadataService.class);
+
 	/** 
 	* Enhance NCML with Data Discovery conventions elements if not already in place in the metadata.
 	* 
