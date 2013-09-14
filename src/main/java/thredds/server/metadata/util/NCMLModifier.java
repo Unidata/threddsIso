@@ -82,43 +82,33 @@ public class NCMLModifier {
 
 		// Geospatial
 		if (ext._minLon != null)
-			addElem(groupElem, "geospatial_lon_min", ext._minLon.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lon_min", ext._minLon.toString(), "float");
 		if (ext._minLat != null)
-			addElem(groupElem, "geospatial_lat_min", ext._minLat.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lat_min", ext._minLat.toString(), "float");
 		if (ext._maxLon != null)
-			addElem(groupElem, "geospatial_lon_max", ext._maxLon.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lon_max", ext._maxLon.toString(), "float");
 		if (ext._maxLat != null)
-			addElem(groupElem, "geospatial_lat_max", ext._maxLat.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lat_max", ext._maxLat.toString(), "float");
 		if (ext._lonUnits != null)
 			addElem(groupElem, "geospatial_lon_units", ext._lonUnits);
-		if (ext._latUnits != null)
+    if (ext._latUnits != null)
 			addElem(groupElem, "geospatial_lat_units", ext._latUnits);
 		if (ext._lonRes != null)
-			addElem(groupElem, "geospatial_lon_resolution",
-					ext._lonRes.toString());
+			addElem(groupElem, "geospatial_lon_resolution", ext._lonRes.toString());
 		if (ext._latRes != null)
-			addElem(groupElem, "geospatial_lat_resolution",
-					ext._latRes.toString());
+			addElem(groupElem, "geospatial_lat_resolution", ext._latRes.toString());
 
 		// VERTICAL
 		if (ext._minHeight != null)
-			addElem(groupElem, "geospatial_vertical_min",
-					ext._minHeight.toString());
+			addElem(groupElem, "geospatial_vertical_min", ext._minHeight.toString());
 		if (ext._maxHeight != null)
-			addElem(groupElem, "geospatial_vertical_max",
-					ext._maxHeight.toString());
+			addElem(groupElem, "geospatial_vertical_max", ext._maxHeight.toString());
 		if (ext._heightUnits != null)
 			addElem(groupElem, "geospatial_vertical_units", ext._heightUnits);
 		if (ext._heightRes != null)
-			addElem(groupElem, "geospatial_vertical_resolution",
-					ext._heightRes.toString());
+			addElem(groupElem, "geospatial_vertical_resolution", ext._heightRes.toString());
 		if (ext._vOrientation != null)
-			addElem(groupElem, "geospatial_vertical_positive",
-					ext._vOrientation);
+			addElem(groupElem, "geospatial_vertical_positive", ext._vOrientation);
 
 		// TIME
 		if (ext._minTime != null)
@@ -128,11 +118,9 @@ public class NCMLModifier {
 		if (ext._timeUnits != null)
 			addElem(groupElem, "time_coverage_units", ext._timeUnits.toString());
 		if (ext._timeRes != null)
-			addElem(groupElem, "time_coverage_resolution",
-					ext._timeRes.toString());
+			addElem(groupElem, "time_coverage_resolution", ext._timeRes.toString());
 		if (ext._timeRes != null)
-			addElem(groupElem, "time_coverage_duration",
-					ext._timeDuration.toString());
+			addElem(groupElem, "time_coverage_duration", ext._timeDuration.toString());
 	}
 
 	/**
@@ -150,26 +138,21 @@ public class NCMLModifier {
 			return;
 		if (ids.getID() != null)
 			addElem(groupElem, "id", ids.getID());
+
 		if (ids.getFullName() != null)
 			addElem(groupElem, "full_name", ids.getFullName());
-		if ((ids.getDataFormatType() != null)
-				&& (ids.getDataFormatType() != DataFormatType.NONE))
-			addElem(groupElem, "data_format_type",
-					StringUtil2.quoteHtmlContent(ids.getDataFormatType()
-							.toString()));
-		if ((ids.getDataType() != null)
-				&& (ids.getDataType() != FeatureType.ANY)
-				&& (ids.getDataType() != FeatureType.NONE))
-			addElem(groupElem, "data_type",
-					StringUtil2.quoteHtmlContent(ids.getDataType().toString()));
-		if ((ids.getCollectionType() != null)
-				&& (ids.getCollectionType() != CollectionType.NONE))
-			addElem(groupElem, "collection_type",
-					StringUtil2.quoteXmlContent(ids.getCollectionType()
-							.toString()));
+
+		if ((ids.getDataFormatType() != null) && (ids.getDataFormatType() != DataFormatType.NONE))
+			addElem(groupElem, "data_format_type", StringUtil2.quoteHtmlContent(ids.getDataFormatType().toString()));
+
+		if ((ids.getDataType() != null) && (ids.getDataType() != FeatureType.ANY) && (ids.getDataType() != FeatureType.NONE))
+			addElem(groupElem, "data_type", StringUtil2.quoteHtmlContent(ids.getDataType().toString()));
+
+    if ((ids.getCollectionType() != null) && (ids.getCollectionType() != CollectionType.NONE))
+			addElem(groupElem, "collection_type", StringUtil2.quoteXmlContent(ids.getCollectionType().toString()));
+
 		if (ids.getAuthority() != null)
-			addElem(groupElem, "authority",
-					StringUtil2.quoteXmlContent(ids.getAuthority()));
+			addElem(groupElem, "authority", StringUtil2.quoteXmlContent(ids.getAuthority()));
 
 		java.util.List<InvDocumentation> docs = ids.getDocumentation();
 		if (docs.size() > 0) {

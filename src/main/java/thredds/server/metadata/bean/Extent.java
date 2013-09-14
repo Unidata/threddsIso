@@ -33,8 +33,7 @@ package thredds.server.metadata.bean;
  * <p/>
  */
 public class Extent {
-	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
-			.getLogger(Extent.class);
+	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(Extent.class);
 	public Double _minLat = null;
 	public Double _maxLat = null;
 	public Double _minLon = null;
@@ -49,7 +48,7 @@ public class Extent {
 	public Double _maxHeight = null;
 	public String _heightUnits = null;
 	public Double _heightRes = null;
-	public String _vOrientation = null;;
+	public String _vOrientation = null;
 
 	public String _minTime = null;
 	public String _maxTime = null;
@@ -151,7 +150,7 @@ public class Extent {
 	 * @return text String representation of the Extent clas
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (_minLon != null)
 			sb.append("minLon=" + _minLon.toString() + ";");
 		if (_minLat != null)

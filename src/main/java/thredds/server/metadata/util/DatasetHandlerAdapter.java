@@ -50,8 +50,8 @@ public class DatasetHandlerAdapter {
 	/**
 	* Open a NetcdfDataset based on the incoming url request.
 	*
-	* @param request incoming url request
-	* @param response outgoing web based response
+	* @param req incoming url request
+	* @param res outgoing web based response
 	* @return dataset a NetcdfDataset as specified in the request
 	*/
 	public static NetcdfDataset openDataset(final HttpServletRequest req,
@@ -75,8 +75,7 @@ public class DatasetHandlerAdapter {
 		} else {
 
 			try {
-				netcdfFile = DatasetHandler
-						.getNetcdfFile(req, res, datasetPath);
+				netcdfFile = DatasetHandler.getNetcdfFile(req, res, datasetPath);
 
 				_log.debug("datasetPath: " + datasetPath + " netcdfFile location: " + netcdfFile.getLocation());
 		
