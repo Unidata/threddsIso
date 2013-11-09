@@ -43,6 +43,7 @@ import thredds.catalog.InvDataset;
 import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.servlet.ThreddsConfig;
+import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -92,9 +93,9 @@ public class NcmlController extends AbstractMetadataController implements Initia
 			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
 			//Workaround for now...
 			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);			
-			
 			isAllowed(_allow, _metadataServiceType, res);
-			res.setContentType("text/xml");
+			res.setContentType(ContentType.xml.getContentHeader());
+
 			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,

@@ -48,6 +48,7 @@ import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.servlet.ThreddsConfig;
+import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -98,9 +99,9 @@ public class UddcController extends AbstractMetadataController implements Initia
 			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
 			//Workaround for now...
 			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
-			
 			isAllowed(_allow, _metadataServiceType, res);
-			res.setContentType("text/html");
+			res.setContentType(ContentType.html.getContentHeader());
+
 			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,
@@ -115,11 +116,8 @@ public class UddcController extends AbstractMetadataController implements Initia
 				writer.flush();
 				writer.close();
 				
-				
 				InputStream is = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
-			
 				ThreddsTranslatorUtil.transform(xslFile, is, res.getWriter());
-				
 				res.getWriter().flush();
 			}
 		} catch (ThreddsUtilitiesException tue) {

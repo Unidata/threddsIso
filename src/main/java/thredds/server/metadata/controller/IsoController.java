@@ -49,6 +49,7 @@ import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.servlet.ThreddsConfig;
+import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -102,7 +103,7 @@ public class IsoController extends AbstractMetadataController implements Initial
 			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
 			
 			isAllowed(_allow, _metadataServiceType, res);
-			res.setContentType("text/xml");
+			res.setContentType(ContentType.xml.getContentHeader());
 			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,
