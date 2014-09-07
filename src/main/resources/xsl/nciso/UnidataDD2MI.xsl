@@ -54,6 +54,7 @@
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:document/nc:attribute[@type='comment']/@value)"/>
   <xsl:variable name="history" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='history']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:document/nc:attribute[@type='history']/@value)"/>
+  <xsl:variable name="places" select="(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='vocab'])"/>
   <!-- Extent Search Fields: 17 possible -->
   <xsl:variable name="geospatial_lat_min" as="xs:string*"
     select="(/nc:netcdf/nc:group[@name='CFMetadata']/nc:attribute[@name='geospatial_lat_min']/@value,
@@ -479,6 +480,40 @@
               </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
           </xsl:if>
+          <!-- Added GCMD Location Keywords (-jmaurer, March 2014): -->
+          <xsl:if test="count($places)">
+            <gmd:descriptiveKeywords>
+              <gmd:MD_Keywords>
+                <xsl:for-each select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='vocab']/nc:attribute[@name='name']/@value">
+                  <gmd:keyword>
+                    <gco:CharacterString>
+                      <xsl:value-of select="."/>
+                    </gco:CharacterString>
+                  </gmd:keyword>
+                </xsl:for-each>
+                <gmd:type>
+                  <xsl:call-template name="writeCodelist">
+                    <xsl:with-param name="codeListName" select="'gmd:MD_KeywordTypeCode'"/>
+                    <xsl:with-param name="codeListValue" select="'place'"/>
+                  </xsl:call-template>
+                </gmd:type>
+                <gmd:thesaurusName>
+                  <gmd:CI_Citation>
+                    <gmd:title>
+                      <xsl:call-template name="writeCharacterString">
+                        <xsl:with-param name="stringToWrite" select="'GCMD Location Keywords'"/>
+                      </xsl:call-template>
+                    </gmd:title>
+                    <gmd:date>
+                      <xsl:attribute name="gco:nilReason">
+                        <xsl:value-of select="'unknown'"/>
+                      </xsl:attribute>
+                    </gmd:date>
+                  </gmd:CI_Citation>
+                </gmd:thesaurusName>
+              </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+          </xsl:if>
           <xsl:if test="count($project)">
             <gmd:descriptiveKeywords>
               <gmd:MD_Keywords>
@@ -742,6 +777,7 @@
           <xsl:with-param name="serviceTypeName" select="'THREDDS OPeNDAP'"/>
           <xsl:with-param name="serviceOperationName" select="'OPeNDAP Client Access'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='opendap_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'OPeNDAP:OPeNDAP'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='opendap_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -751,6 +787,7 @@
           <xsl:with-param name="serviceTypeName" select="'Open Geospatial Consortium Web Coverage Service (WCS)'"/>
           <xsl:with-param name="serviceOperationName" select="'GetCapabilities'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='wcs_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'OGC:WCS'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='wcs_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -760,6 +797,7 @@
           <xsl:with-param name="serviceTypeName" select="'Open Geospatial Consortium Web Map Service (WMS)'"/>
           <xsl:with-param name="serviceOperationName" select="'GetCapabilities'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='wms_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'OGC:WMS'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='wms_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -769,6 +807,7 @@
           <xsl:with-param name="serviceTypeName" select="'Open Geospatial Consortium Sensor Observation Service (SOS)'"/>
           <xsl:with-param name="serviceOperationName" select="'GetCapabilities'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='sos_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'OGC:SOS'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='sos_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -778,6 +817,7 @@
           <xsl:with-param name="serviceTypeName" select="'THREDDS NetCDF Subset Service'"/>
           <xsl:with-param name="serviceOperationName" select="'NetCDFSubsetService'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='nccs_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'UNIDATA:NCSS'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='nccs_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -787,6 +827,7 @@
           <xsl:with-param name="serviceTypeName" select="'THREDDS HTTP Service'"/>
           <xsl:with-param name="serviceOperationName" select="'FileHTTPService'"/>
           <xsl:with-param name="operationURL" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='httpserver_service']/@value"/>
+          <xsl:with-param name="operationProtocol" select="'file'"/>
           <xsl:with-param name="operationNode" select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='httpserver_service']" as="node()"/>
         </xsl:call-template>
       </xsl:if>
@@ -877,6 +918,7 @@
                   </gmd:MD_Format>
                 </gmd:distributorFormat>
                 <xsl:if test="$thredds_opendapCnt">
+                  <!-- Added gmd:protocol. (-jmaurer, 2014-09-04) -->
                   <gmd:distributorTransferOptions>
                     <gmd:MD_DigitalTransferOptions>
                       <gmd:onLine>
@@ -886,6 +928,9 @@
                               <xsl:value-of select="concat(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='opendap_service']/@value,'.html')"/>
                             </gmd:URL>
                           </gmd:linkage>
+                          <gmd:protocol>
+                            <gco:CharacterString>http</gco:CharacterString>
+                          </gmd:protocol>
                           <gmd:name>
                             <gco:CharacterString>File Information</gco:CharacterString>
                           </gmd:name>
@@ -925,6 +970,62 @@
                     </gmd:MD_DigitalTransferOptions>
                   </gmd:distributorTransferOptions>
                 </xsl:if>
+                <!-- Viewer properties are displayed as transferOptions -->
+                <xsl:for-each select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='properties']/nc:attribute[contains(@name,'viewer')]">
+                  <gmd:distributorTransferOptions>
+                    <gmd:MD_DigitalTransferOptions>
+                      <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                          <gmd:linkage>
+                            <gmd:URL>
+                              <xsl:choose>
+                                <xsl:when test="contains(@value,',')">
+                                  <xsl:for-each select="tokenize(@value,',')">
+                                    <xsl:if test="position()!=last()">
+                                      <xsl:choose>
+                                        <xsl:when test="position()=1">
+                                          <xsl:value-of select="."/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                          <xsl:value-of select="concat(',',.)"/>
+                                        </xsl:otherwise>
+                                      </xsl:choose>
+                                    </xsl:if>
+                                  </xsl:for-each>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="@value"/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </gmd:URL>
+                          </gmd:linkage>
+                          <gmd:protocol>
+                            <gco:CharacterString>http</gco:CharacterString>
+                          </gmd:protocol>
+                          <gmd:name>
+                            <gco:CharacterString>
+                              <!-- The title is the part of the string after the last comma -->
+                              <xsl:choose>
+                                <xsl:when test="contains(@value,',')">
+                                  <xsl:value-of select="tokenize(@value, ',')[last()]"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="'Data Viewer'"/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </gco:CharacterString>
+                          </gmd:name>
+                          <gmd:description>
+                            <gco:CharacterString>This URL provides a viewer for this dataset.</gco:CharacterString>
+                          </gmd:description>
+                          <gmd:function>
+                            <gmd:CI_OnLineFunctionCode codeList="http://www.ngdc.noaa.gov/metadata/published/xsd/schema/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
+                          </gmd:function>
+                        </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+                    </gmd:MD_DigitalTransferOptions>
+                  </gmd:distributorTransferOptions>
+                </xsl:for-each>
               </gmd:MD_Distributor>
             </gmd:distributor>
           </gmd:MD_Distribution>
@@ -1302,11 +1403,15 @@
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
+  <!--
+  Added operationProtocol to capture gmd:protocol value of each service. (-jmaurer, 2014-09-04)
+  -->
   <xsl:template name="writeService">
     <xsl:param name="serviceID"/>
     <xsl:param name="serviceTypeName"/>
     <xsl:param name="serviceOperationName"/>
     <xsl:param name="operationURL"/>
+    <xsl:param name="operationProtocol"/>
     <xsl:param name="operationNode"/>
     <gmd:identificationInfo>
       <xsl:element name="srv:SV_ServiceIdentification">
@@ -1506,6 +1611,11 @@
                     <xsl:value-of select="$operationURL"/>
                   </gmd:URL>
                 </gmd:linkage>
+                <gmd:protocol>
+                  <gco:CharacterString>
+                    <xsl:value-of select="$operationProtocol"/>
+                  </gco:CharacterString>
+                </gmd:protocol>
                 <gmd:name>
                   <gco:CharacterString>
                     <xsl:value-of select="$serviceID"/>
