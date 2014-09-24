@@ -929,7 +929,7 @@
                             </gmd:URL>
                           </gmd:linkage>
                           <gmd:protocol>
-                            <gco:CharacterString>http</gco:CharacterString>
+                            <gco:CharacterString>WWW:LINK</gco:CharacterString>
                           </gmd:protocol>
                           <gmd:name>
                             <gco:CharacterString>File Information</gco:CharacterString>
@@ -955,6 +955,9 @@
                                 select="concat('http://www.ncdc.noaa.gov/oa/wct/wct-jnlp-beta.php?singlefile=',/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='opendap_service']/@value)"/>
                             </gmd:URL>
                           </gmd:linkage>
+                          <gmd:protocol>
+                            <gco:CharacterString>WWW:LINK</gco:CharacterString>
+                          </gmd:protocol>
                           <gmd:name>
                             <gco:CharacterString>Viewer Information</gco:CharacterString>
                           </gmd:name>
@@ -1000,7 +1003,7 @@
                             </gmd:URL>
                           </gmd:linkage>
                           <gmd:protocol>
-                            <gco:CharacterString>http</gco:CharacterString>
+                            <gco:CharacterString>WWW:LINK</gco:CharacterString>
                           </gmd:protocol>
                           <gmd:name>
                             <gco:CharacterString>
@@ -1188,7 +1191,7 @@
                             </gmd:URL>
                           </gmd:linkage>
                           <gmd:protocol>
-                            <gco:CharacterString>http</gco:CharacterString>
+                            <gco:CharacterString>WWW:LINK</gco:CharacterString>
                           </gmd:protocol>
                           <gmd:applicationProfile>
                             <gco:CharacterString>web browser</gco:CharacterString>
