@@ -15,7 +15,7 @@
             <xd:p><xd:b>Author:</xd:b>ted.habermann@noaa.gov</xd:p>
         </xd:desc>
     </xd:doc>
-    <xsl:variable name="stylesheetVersion" select="'2.3'"/>
+    <xsl:variable name="stylesheetVersion" select="'2.3.1'"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:strip-space elements="*"/>
     <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'"/>
@@ -1053,7 +1053,7 @@
                 <gmd:MD_MaintenanceInformation>
                     <gmd:maintenanceAndUpdateFrequency gco:nilReason="unknown"/>
                     <gmd:maintenanceNote>
-                        <gco:CharacterString>This record was translated from NcML using UnidataDD2MI.xsl Version <xsl:value-of select="$stylesheetVersion"/></gco:CharacterString>
+                        <gco:CharacterString>This record was translated from NcML using UnidataDD2MI.xsl Version <xsl:value-of select="$stylesheetVersion"/>. (<xsl:value-of select="current-dateTime()"/>)</gco:CharacterString>
                     </gmd:maintenanceNote>
                 </gmd:MD_MaintenanceInformation>
             </gmd:metadataMaintenance>
