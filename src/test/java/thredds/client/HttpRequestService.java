@@ -1,7 +1,7 @@
 package thredds.client;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
+//import org.apache.commons.httpclient.HttpClient;
+//import org.apache.commons.httpclient.methods.GetMethod;
 
 public class HttpRequestService {
 
@@ -9,13 +9,13 @@ public class HttpRequestService {
         String result = null;
     
         try {
-            HttpClient client = new HttpClient();
-            GetMethod get = new GetMethod(url);
-            get.setQueryString(queryString);
-            client.executeMethod(get);
-        
-            result = get.getResponseBodyAsString();
-            get.releaseConnection();
+//            HttpClient client = new HttpClient();
+//            GetMethod get = new GetMethod(url);
+//            get.setQueryString(queryString);
+//            client.executeMethod(get);
+//
+//            result = get.getResponseBodyAsString();
+//            get.releaseConnection();
         } 
         catch (Exception e) {
             throw new Exception("Get failed", e);
