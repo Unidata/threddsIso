@@ -2,6 +2,8 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nc="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2" exclude-result-prefixes="nc">
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
+        Recent Modifications
+            <xd:p>2015-01-16. fixed date error to prevent replacement of all spaces (' ') with a 'T' in the dates certain cases.</xd:p>
             <xd:p>2014-11-25. fixed error that was outputting '::' at the end of a date.</xd:p>
             <xd:p>2014-09-24. 1) Change all gmd:protocol entries of "http" to the valid entry of "WWW:LINK". There is no "http" valid in the list of gmd:protocol valids maintained at https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) gmd:protocol was missing from the NCDC climate and weather toolkit. I have added this entry with a value of "WWW:LINK".</xd:p>
             <xd:p>2014-09-05. 1) Adds gmd:protocol elements to all service end points (srv:SV_ServiceIdentification) identifying them as either OPeNDAP:OPeNDAP, UNIDATA:NCSS, OGC:WMS, OGC:WCS, or OGC:SOS--the appropriate valids from this list: https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) Add GCMD Location Keywords from THREDDS catalog metadata: all "geospatialCoverage > name" entries. 3) Adds each "viewer" entry from the THREDDS catalog metadata as an additional gmd:distributorTransferOptions. John Maurer jmaurer@hawaii.edu</xd:p>
@@ -10,12 +12,10 @@
             <xd:p>2014-07-16. updated uom units for time to display only seconds or days when includes "days since..." or "seconds since..." text. </xd:p>
             <xd:p> 2014-04-19. Changed order to look in CFMetadata group first in *unit variables. Added normalize-space dimensionResolution param to fix vertical units error. </xd:p>
             <xd:p> 2012-05-11. 2.3 (slight revision): Changed the attribute name from coverage_type to coverage_content_type to be more correct and directly comparable to ISO....</xd:p>
-            <xd:p><xd:b>Modified on:</xd:b> May 10, 2012</xd:p>
-            <xd:p><xd:b>Version:</xd:b>2.3</xd:p>
-            <xd:p><xd:b>Author:</xd:b>ted.habermann@noaa.gov</xd:p>
+            <xd:p> May 10, 2012 version 2.3 authored by Ted Habermann</xd:p>
         </xd:desc>
     </xd:doc>
-    <xsl:variable name="stylesheetVersion" select="'2.3.1'"/>
+    <xsl:variable name="stylesheetVersion" select="'2.3.2'"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:strip-space elements="*"/>
     <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'"/>
@@ -1095,7 +1095,6 @@
         <xsl:param name="dateToWrite"/>
         <xsl:param name="dateType"/>
         <xsl:if test="$testValue">
-            <xsl:comment>source date:<xsl:value-of select="$dateToWrite"/></xsl:comment>            
             <xsl:choose>
                 <!--Modified on 2014-07-24-->
                 <xsl:when test="$dateToWrite=''">
@@ -1121,7 +1120,7 @@
                                         <xsl:value-of select="substring-before($dateToWrite, ' UTC')"/>
                                     </xsl:variable>
                                     <xsl:choose>
-                                        <xsl:when test="string-length($utcDate=16)">
+                                        <xsl:when test="string-length($utcDate)='16'">
                                             <xsl:value-of select="concat(translate($utcDate,' ','T'),':00')"/>
                                         </xsl:when>
                                         <xsl:otherwise>
@@ -1139,14 +1138,14 @@
                         </gmd:CI_Date>
                     </gmd:date>
                 </xsl:when>
-                <xsl:when test="contains(translate($dateToWrite,' ','T'), 'T' )">                    
+                <xsl:when test="contains(translate($dateToWrite,' ','T'), 'T') and contains($dateToWrite, ':')">                    
                     <gmd:date>
                         <gmd:CI_Date>
                             <gmd:date>
                                 <gco:DateTime>
                                     <!-- Modified on 2014-07-24 -->
                                     <xsl:choose>
-                                        <xsl:when test="contains($dateToWrite, 'T') and string-length($dateToWrite=16) and not(contains($dateToWrite, '-'))">
+                                         <xsl:when test="contains($dateToWrite, 'T') and string-length($dateToWrite)='16' and not(contains($dateToWrite, '-'))">
                                             <xsl:value-of select="substring($dateToWrite,1, 4)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,5,2)"/>
@@ -1159,8 +1158,11 @@
                                             <xsl:text>:</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,14)"/>
                                         </xsl:when>
-                                        <xsl:otherwise>
+                                        <xsl:when test="contains($dateToWrite, ' ') and contains($dateToWrite, ':')">
                                             <xsl:value-of select="translate($dateToWrite,' ','T')"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>                                            
+                                            <xsl:value-of select="normalize-space($dateToWrite)"/>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </gco:DateTime>
@@ -1179,17 +1181,18 @@
                         <gmd:CI_Date>
                             <gmd:date>                                                                
                                 <gco:Date>       
-                                    <!-- Modified on 2014-07-24 -->
-                                    <xsl:choose>                                        
-                                        <!-- Modified on 2014-11-25 -->
-                                        <xsl:when test="string-length($dateToWrite=8) and not(contains($dateToWrite, '-'))">
+                                    <xsl:choose>
+                                        <xsl:when test="string-length($dateToWrite)='4' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                            <xsl:value-of select="concat($dateToWrite,'-01-01')"/>
+                                        </xsl:when>
+                                        <xsl:when test="string-length($dateToWrite)='8' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
                                             <xsl:value-of select="substring($dateToWrite,1, 4)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,5,2)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,7,2)"/>
                                         </xsl:when>                                        
-                                        <xsl:when test="string-length($dateToWrite=16) and not(contains($dateToWrite, '-'))">
+                                         <xsl:when test="string-length($dateToWrite)='16' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
                                             <xsl:value-of select="substring($dateToWrite,1, 4)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,5,2)"/>
@@ -1635,7 +1638,7 @@
                                 <xsl:if test="count($modifiedDate)">
                                     <xsl:call-template name="writeDate">
                                         <xsl:with-param name="testValue" select="count($modifiedDate)"/>
-                                        <xsl:with-param name="dateToWrite" select="substring($modifiedDate[1],1,10)"/>
+                                        <xsl:with-param name="dateToWrite" select="$modifiedDate[1]"/>
                                         <xsl:with-param name="dateType" select="'revision'"/>
                                     </xsl:call-template>
                                 </xsl:if>
