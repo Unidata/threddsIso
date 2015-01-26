@@ -42,8 +42,8 @@ public class ElementNameComparator implements Comparator<Element> {
 	/** 
 	* Compare to XML element based on element name.
 	* 
-	* @param element the first XML element 
-	* @param element the second XML element
+	* @param o1 the first XML element
+	* @param o2 the second XML element
 	*/	
 	public int compare(final Element o1, final Element o2) {
         String s1 = (o1).getName();

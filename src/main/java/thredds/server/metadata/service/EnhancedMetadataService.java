@@ -42,58 +42,57 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 /**
-* EnhancedMetadataService
-* @author: dneufeld
-* Date: Jul 19, 2010
-*/	
+ * EnhancedMetadataService
+ *
+ * @author: dneufeld
+ * Date: Jul 19, 2010
+ */
 public class EnhancedMetadataService {
-	private static Logger _log = Logger.getLogger(EnhancedMetadataService.class);
-	
-	/** 
-	* Enhance NCML with Data Discovery conventions elements if not already in place in the metadata.
-	* 
-	* @param dataset NetcdfDataset to enhance the NCML
-	* @param writer writer to send enhanced NCML to
-	* @param req incoming URL request
-	*/	
-	public static void enhance(final NetcdfDataset dataset, final InvDataset ids, final Writer writer) throws Exception {
-		Extent ext = null;
-				
-    	NCMLModifier ncmlMod = new NCMLModifier();
-    	
-		ext = ThreddsExtentUtil.getExtent(dataset);
-		
-        NcMLWriter ncMLWriter = new NcMLWriter();        	
-		String ncml = ncMLWriter.writeXML(dataset);
-		InputStream ncmlIs = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
-    	XMLUtil xmlUtil = new XMLUtil(ncmlIs);
-    	
-    	List<Element> list = xmlUtil.elemFinder("//ncml:netcdf", "ncml", "http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2");
-    	Element rootElem = list.get(0);
-    	Element cfGroupElem = ncmlMod.doAddGroupElem(rootElem, "CFMetadata");
-    	ncmlMod.addCFMetadata(ext, cfGroupElem);
-    	
-    	Element ncIsoGroupElem = ncmlMod.doAddGroupElem(rootElem, "NCISOMetadata");
-    	ncmlMod.addNcIsoMetadata(ncIsoGroupElem);
-    	
-    	if (ids!=null) {
-    	    Element threddsGroupElem = ncmlMod.doAddGroupElem(rootElem, "THREDDSMetadata");
-    	    ncmlMod.addThreddsMetadata(ids, threddsGroupElem);
-    	}
-	    
-    	Attribute locAttr = rootElem.getAttribute("location");
-	    String openDapService = (ncmlMod.getOpenDapService()==null) ? "Not provided because of security concerns." : ncmlMod.getOpenDapService();
-	    locAttr.setValue(openDapService);
-	    
-		xmlUtil.sortElements(rootElem, new ElementNameComparator());
-    	xmlUtil.write(writer);				
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(EnhancedMetadataService.class);
+
+  /**
+   * Enhance NCML with Data Discovery conventions elements if not already in place in the metadata.
+   *
+   * @param dataset NetcdfDataset to enhance the NCML
+   * @param writer  writer to send enhanced NCML to
+   */
+  public static void enhance(final NetcdfDataset dataset, final InvDataset ids, final Writer writer) throws Exception {
+    Extent ext = null;
+
+    NCMLModifier ncmlMod = new NCMLModifier();
+
+    ext = ThreddsExtentUtil.getExtent(dataset);
+
+    NcMLWriter ncMLWriter = new NcMLWriter();
+    String ncml = ncMLWriter.writeXML(dataset);
+    InputStream ncmlIs = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
+    XMLUtil xmlUtil = new XMLUtil(ncmlIs);
+
+    List<Element> list = xmlUtil.elemFinder("//ncml:netcdf", "ncml", "http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2");
+    Element rootElem = list.get(0);
+    Element cfGroupElem = ncmlMod.doAddGroupElem(rootElem, "CFMetadata");
+    ncmlMod.addCFMetadata(ext, cfGroupElem);
+
+    Element ncIsoGroupElem = ncmlMod.doAddGroupElem(rootElem, "NCISOMetadata");
+    ncmlMod.addNcIsoMetadata(ncIsoGroupElem);
+
+    if (ids != null) {
+      Element threddsGroupElem = ncmlMod.doAddGroupElem(rootElem, "THREDDSMetadata");
+      ncmlMod.addThreddsMetadata(ids, threddsGroupElem);
+    }
+
+    Attribute locAttr = rootElem.getAttribute("location");
+    String openDapService = (ncmlMod.getOpenDapService() == null) ? "Not provided because of security concerns." : ncmlMod.getOpenDapService();
+    locAttr.setValue(openDapService);
+
+    xmlUtil.sortElements(rootElem, new ElementNameComparator());
+    xmlUtil.write(writer);
 
 
-	}
+  }
 
 }

@@ -31,7 +31,6 @@ package thredds.server.metadata.util;
 import thredds.server.metadata.exception.ThreddsUtilitiesException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import ucar.nc2.NCdumpW;
 import ucar.nc2.NetcdfFile;
@@ -58,7 +57,7 @@ import java.io.Writer;
  * Date: May 19, 2010
  */
 public class ThreddsTranslatorUtil {
-	private static Logger _log = Logger.getLogger(ThreddsTranslatorUtil.class); 
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(ThreddsTranslatorUtil.class);
     private static final String _tempFileName = "theFile.out";
     private static final TransformerFactory transFact = new net.sf.saxon.TransformerFactoryImpl();
 

@@ -39,7 +39,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -56,8 +55,8 @@ import org.jdom.xpath.XPath;
  * @author dneufeld
  */
 public class XMLUtil {
-	private static Logger _log = Logger.getLogger(XMLUtil.class);
-	
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(XMLUtil.class);
+
 	private Document _doc = null;
 		
    /** 

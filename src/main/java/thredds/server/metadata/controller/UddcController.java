@@ -28,13 +28,19 @@
  */
 package thredds.server.metadata.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import thredds.catalog.InvDataset;
 import thredds.server.metadata.exception.ThreddsUtilitiesException;
@@ -42,14 +48,7 @@ import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.servlet.ThreddsConfig;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-
+import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -58,8 +57,8 @@ import ucar.nc2.dataset.NetcdfDataset;
  * <p/>
  */
 @Controller
-@RequestMapping("/uddc")
-public class UddcController extends AbstractMetadataController {
+@RequestMapping("/uddc/")
+public class UddcController extends AbstractMetadataController implements InitializingBean{
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 		    .getLogger(UddcController.class);
 
@@ -67,8 +66,10 @@ public class UddcController extends AbstractMetadataController {
 		return _metadataServiceType + "/";
 	}
 	
-	public void init() throws ServletException {
+	//public void init() throws ServletException {
+	public void afterPropertiesSet() throws ServletException {
 		_metadataServiceType = "UDDC";
+		_servletPath ="/uddc";
 		_logServerStartup.info("Metadata UDDC - initialization start");
 		_allow = ThreddsConfig.getBoolean("NCISO.uddcAllow", false);
 	    _logServerStartup.info("NCISO.uddcAllow = " + _allow);		
@@ -84,22 +85,24 @@ public class UddcController extends AbstractMetadataController {
 	/** 
 	* Generate a report on quality of the metadata for the underlying NetcdfDataset
 	* 
-	* @param request incoming url request 
-	* @param response outgoing web based response
+	* @param req incoming url request
+	* @param res outgoing web based response
 	* @throws ServletException if ServletException occurred
-	* @throws IOException if IOException occurred  
-	*/	
-	@RequestMapping(params = {})
-	public void handleMetadataRequest(final HttpServletRequest req,
-			final HttpServletResponse res) throws ServletException {
+	*/
+	@RequestMapping(value="**", params = {})
+	public void handleMetadataRequest(final HttpServletRequest req, final HttpServletResponse res) throws ServletException {
 		_log.info("Handling UDDC metadata request.");
 
 		NetcdfDataset netCdfDataset = null;
 
 		try {
+			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
+			//Workaround for now...
+			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
 			isAllowed(_allow, _metadataServiceType, res);
-			res.setContentType("text/html");
-			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res);
+			res.setContentType(ContentType.html.getContentHeader());
+
+			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,
 						"ThreddsIso Extension: Requested resource not found.");
@@ -113,12 +116,8 @@ public class UddcController extends AbstractMetadataController {
 				writer.flush();
 				writer.close();
 				
-				
-				InputStream is = new ByteArrayInputStream(
-						ncml.getBytes("UTF-8"));
-			
+				InputStream is = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
 				ThreddsTranslatorUtil.transform(xslFile, is, res.getWriter());
-				
 				res.getWriter().flush();
 			}
 		} catch (ThreddsUtilitiesException tue) {

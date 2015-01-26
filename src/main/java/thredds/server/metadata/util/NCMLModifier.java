@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -51,7 +50,7 @@ import ucar.nc2.constants.FeatureType;
 import ucar.nc2.units.DateRange;
 import ucar.nc2.units.DateType;
 import ucar.nc2.units.TimeDuration;
-import ucar.unidata.util.StringUtil;
+import ucar.unidata.util.StringUtil2;
 
 /**
  * NCMLModifier
@@ -59,7 +58,7 @@ import ucar.unidata.util.StringUtil;
  * @author: dneufeld Date: Jun 6, 2010
  */
 public class NCMLModifier {
-	private static Logger logger = Logger.getLogger(NCMLModifier.class);
+  static private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NCMLModifier.class);
 	private String _openDapService = null;
 	private String _version = "2.2.2";
 
@@ -74,52 +73,42 @@ public class NCMLModifier {
 	 * Update the NCML document by calculating Data Discovery elements using CF
 	 * conventions wherever possible.
 	 * 
-	 * @param extent
+	 * @param ext
 	 *            the geospatial extent of the NetCDF file
-	 * @param element
+	 * @param groupElem
 	 *            the root XML element of the NCML document
 	 */
 	public void addCFMetadata(final Extent ext, final Element groupElem) {
 
 		// Geospatial
 		if (ext._minLon != null)
-			addElem(groupElem, "geospatial_lon_min", ext._minLon.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lon_min", ext._minLon.toString(), "float");
 		if (ext._minLat != null)
-			addElem(groupElem, "geospatial_lat_min", ext._minLat.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lat_min", ext._minLat.toString(), "float");
 		if (ext._maxLon != null)
-			addElem(groupElem, "geospatial_lon_max", ext._maxLon.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lon_max", ext._maxLon.toString(), "float");
 		if (ext._maxLat != null)
-			addElem(groupElem, "geospatial_lat_max", ext._maxLat.toString(),
-					"float");
+			addElem(groupElem, "geospatial_lat_max", ext._maxLat.toString(), "float");
 		if (ext._lonUnits != null)
 			addElem(groupElem, "geospatial_lon_units", ext._lonUnits);
-		if (ext._latUnits != null)
+    if (ext._latUnits != null)
 			addElem(groupElem, "geospatial_lat_units", ext._latUnits);
 		if (ext._lonRes != null)
-			addElem(groupElem, "geospatial_lon_resolution",
-					ext._lonRes.toString());
+			addElem(groupElem, "geospatial_lon_resolution", ext._lonRes.toString());
 		if (ext._latRes != null)
-			addElem(groupElem, "geospatial_lat_resolution",
-					ext._latRes.toString());
+			addElem(groupElem, "geospatial_lat_resolution", ext._latRes.toString());
 
 		// VERTICAL
 		if (ext._minHeight != null)
-			addElem(groupElem, "geospatial_vertical_min",
-					ext._minHeight.toString());
+			addElem(groupElem, "geospatial_vertical_min", ext._minHeight.toString());
 		if (ext._maxHeight != null)
-			addElem(groupElem, "geospatial_vertical_max",
-					ext._maxHeight.toString());
+			addElem(groupElem, "geospatial_vertical_max", ext._maxHeight.toString());
 		if (ext._heightUnits != null)
 			addElem(groupElem, "geospatial_vertical_units", ext._heightUnits);
 		if (ext._heightRes != null)
-			addElem(groupElem, "geospatial_vertical_resolution",
-					ext._heightRes.toString());
+			addElem(groupElem, "geospatial_vertical_resolution", ext._heightRes.toString());
 		if (ext._vOrientation != null)
-			addElem(groupElem, "geospatial_vertical_positive",
-					ext._vOrientation);
+			addElem(groupElem, "geospatial_vertical_positive", ext._vOrientation);
 
 		// TIME
 		if (ext._minTime != null)
@@ -129,11 +118,9 @@ public class NCMLModifier {
 		if (ext._timeUnits != null)
 			addElem(groupElem, "time_coverage_units", ext._timeUnits.toString());
 		if (ext._timeRes != null)
-			addElem(groupElem, "time_coverage_resolution",
-					ext._timeRes.toString());
+			addElem(groupElem, "time_coverage_resolution", ext._timeRes.toString());
 		if (ext._timeRes != null)
-			addElem(groupElem, "time_coverage_duration",
-					ext._timeDuration.toString());
+			addElem(groupElem, "time_coverage_duration", ext._timeDuration.toString());
 	}
 
 	/**
@@ -142,7 +129,7 @@ public class NCMLModifier {
 	 * 
 	 * @param ids
 	 *            the THREDDS dataset object retrieved from the catalog
-	 * @param element
+	 * @param groupElem
 	 *            the root XML element of the NCML document
 	 */
 	public void addThreddsMetadata(final InvDataset ids, final Element groupElem)
@@ -151,39 +138,34 @@ public class NCMLModifier {
 			return;
 		if (ids.getID() != null)
 			addElem(groupElem, "id", ids.getID());
+
 		if (ids.getFullName() != null)
 			addElem(groupElem, "full_name", ids.getFullName());
-		if ((ids.getDataFormatType() != null)
-				&& (ids.getDataFormatType() != DataFormatType.NONE))
-			addElem(groupElem, "data_format_type",
-					StringUtil.quoteHtmlContent(ids.getDataFormatType()
-							.toString()));
-		if ((ids.getDataType() != null)
-				&& (ids.getDataType() != FeatureType.ANY)
-				&& (ids.getDataType() != FeatureType.NONE))
-			addElem(groupElem, "data_type",
-					StringUtil.quoteHtmlContent(ids.getDataType().toString()));
-		if ((ids.getCollectionType() != null)
-				&& (ids.getCollectionType() != CollectionType.NONE))
-			addElem(groupElem, "collection_type",
-					StringUtil.quoteXmlContent(ids.getCollectionType()
-							.toString()));
+
+		if ((ids.getDataFormatType() != null) && (ids.getDataFormatType() != DataFormatType.NONE))
+			addElem(groupElem, "data_format_type", StringUtil2.quoteHtmlContent(ids.getDataFormatType().toString()));
+
+		if ((ids.getDataType() != null) && (ids.getDataType() != FeatureType.ANY) && (ids.getDataType() != FeatureType.NONE))
+			addElem(groupElem, "data_type", StringUtil2.quoteHtmlContent(ids.getDataType().toString()));
+
+    if ((ids.getCollectionType() != null) && (ids.getCollectionType() != CollectionType.NONE))
+			addElem(groupElem, "collection_type", StringUtil2.quoteXmlContent(ids.getCollectionType().toString()));
+
 		if (ids.getAuthority() != null)
-			addElem(groupElem, "authority",
-					StringUtil.quoteXmlContent(ids.getAuthority()));
+			addElem(groupElem, "authority", StringUtil2.quoteXmlContent(ids.getAuthority()));
 
 		java.util.List<InvDocumentation> docs = ids.getDocumentation();
 		if (docs.size() > 0) {
 			Element docsGrp = doAddGroupElem(groupElem, "documentation");
 			for (InvDocumentation doc : docs) {
 				Element docGrp = doAddGroupElem(docsGrp, "document");
-				String type = (doc.getType() == null) ? "" : StringUtil
+				String type = (doc.getType() == null) ? "" : StringUtil2
 						.quoteXmlContent(doc.getType());
 				String inline = doc.getInlineContent();
 				String xlink = null;
 				String xlinkTitle = null;
 				if ((inline != null) && (inline.length() > 0))
-					inline = StringUtil.quoteXmlContent(inline);
+					inline = StringUtil2.quoteXmlContent(inline);
 				addElem(docGrp, "inline", inline, type);
 				if (doc.hasXlink()) {
 					xlink = doc.getXlinkHref();
@@ -239,10 +221,10 @@ public class NCMLModifier {
 			for (ThreddsMetadata.Contributor t : contributors) {
 				Element contributorGrp = doAddGroupElem(contributorsGrp,
 						"contributor");
-				String role = (t.getRole() == null) ? "" : StringUtil
+				String role = (t.getRole() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getRole());
 				addElem(contributorGrp, "role", role);
-				String name = (t.getName() == null) ? "" : StringUtil
+				String name = (t.getName() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getName());
 				addElem(contributorGrp, "name", name);
 			}
@@ -252,9 +234,9 @@ public class NCMLModifier {
 		if (keywords.size() > 0) {
 			Element keywordsGrp = doAddGroupElem(groupElem, "keywords");
 			for (ThreddsMetadata.Vocab t : keywords) {
-				String vocab = (t.getVocabulary() == null) ? "" : StringUtil
+				String vocab = (t.getVocabulary() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getVocabulary());
-				String text = StringUtil.quoteXmlContent(t.getText());
+				String text = StringUtil2.quoteXmlContent(t.getText());
 				addElem(keywordsGrp, "keyword", text);
 				if (!vocab.equals(""))
 					addElem(keywordsGrp, "vocab", vocab);
@@ -265,9 +247,9 @@ public class NCMLModifier {
 		if (dates.size() > 0) {
 			Element datesGrp = doAddGroupElem(groupElem, "dates");
 			for (DateType d : dates) {
-				String type = (d.getType() == null) ? "" : StringUtil
+				String type = (d.getType() == null) ? "" : StringUtil2
 						.quoteXmlContent(d.getType());
-				String text = StringUtil.quoteXmlContent(d.getText());
+				String text = StringUtil2.quoteXmlContent(d.getText());
 				addElem(datesGrp, "date", text, type);
 			}
 		}
@@ -276,9 +258,9 @@ public class NCMLModifier {
 		if (projects.size() > 0) {
 			Element projectsGrp = doAddGroupElem(groupElem, "projects");
 			for (ThreddsMetadata.Vocab t : projects) {
-				String vocab = (t.getVocabulary() == null) ? "" : StringUtil
+				String vocab = (t.getVocabulary() == null) ? "" : StringUtil2
 						.quoteXmlContent(t.getVocabulary());
-				String text = StringUtil.quoteXmlContent(t.getText());
+				String text = StringUtil2.quoteXmlContent(t.getText());
 				addElem(projectsGrp, "project", text);
 				if (!vocab.equals(""))
 					addElem(projectsGrp, "vocab", vocab);
@@ -290,8 +272,8 @@ public class NCMLModifier {
 			Element creatorsGrp = doAddGroupElem(groupElem, "creators");
 			for (ThreddsMetadata.Source t : creators) {
 				Element creatorGrp = doAddGroupElem(creatorsGrp, "creator");
-				String name = StringUtil.quoteXmlContent(t.getName());
-				String email = StringUtil.quoteXmlContent(t.getEmail());
+				String name = StringUtil2.quoteXmlContent(t.getName());
+				String email = StringUtil2.quoteXmlContent(t.getEmail());
 				String url = (t.getUrl() != null) ? "" : t.getUrl();
 				addElem(creatorGrp, "name", name);
 				addElem(creatorGrp, "email", email);
@@ -305,8 +287,8 @@ public class NCMLModifier {
 			for (ThreddsMetadata.Source t : publishers) {
 				Element publisherGrp = doAddGroupElem(publishersGrp,
 						"publisher");
-				String name = StringUtil.quoteXmlContent(t.getName());
-				String email = StringUtil.quoteXmlContent(t.getEmail());
+				String name = StringUtil2.quoteXmlContent(t.getName());
+				String email = StringUtil2.quoteXmlContent(t.getEmail());
 				String url = (t.getUrl() != null) ? "" : t.getUrl();
 				addElem(publisherGrp, "name", name);
 				addElem(publisherGrp, "email", email);
@@ -366,7 +348,7 @@ public class NCMLModifier {
 				Element vocabGrp = doAddGroupElem(groupElem, "vocab");
 				for (ThreddsMetadata.Vocab elem : nlist) {
 					addElem(vocabGrp, "name",
-							StringUtil.quoteXmlContent(elem.getText()));
+							StringUtil2.quoteXmlContent(elem.getText()));
 				}
 			}
 		}
@@ -386,12 +368,12 @@ public class NCMLModifier {
 			if (tc.useResolution() && (resolution != null)
 					&& !resolution.isBlank()) {
 				addElem(groupElem, "time_coverage_resolution",
-						StringUtil.quoteXmlContent(resolution.toString()));
+						StringUtil2.quoteXmlContent(resolution.toString()));
 			}
 			TimeDuration duration = tc.getDuration();
 			if (tc.useDuration() && (duration != null) && !duration.isBlank()) {
 				addElem(groupElem, "time_coverage_duration",
-						StringUtil.quoteXmlContent(duration.toString()));
+						StringUtil2.quoteXmlContent(duration.toString()));
 			}
 
 		}
@@ -430,7 +412,7 @@ public class NCMLModifier {
 	/**
 	 * Update the NCML document by adding ncISO specific metadata
 	 * 
-	 * @param element
+	 * @param groupElem
 	 *            the group XML element of the NCML document
 	 */
 	public void addNcIsoMetadata(final Element groupElem) {

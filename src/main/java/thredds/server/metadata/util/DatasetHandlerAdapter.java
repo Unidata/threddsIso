@@ -34,8 +34,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import thredds.servlet.DatasetHandler;
 import thredds.servlet.ServletUtil;
 import ucar.nc2.NetcdfFile;
@@ -47,21 +45,21 @@ import ucar.nc2.dataset.NetcdfDataset;
 * Date: Jul 19, 2010
 */
 public class DatasetHandlerAdapter {
-	private static Logger _log = Logger.getLogger(DatasetHandlerAdapter.class);
+  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(DatasetHandlerAdapter.class);
 
 	/**
 	* Open a NetcdfDataset based on the incoming url request.
 	*
-	* @param request incoming url request
-	* @param response outgoing web based response
+	* @param req incoming url request
+	* @param res outgoing web based response
 	* @return dataset a NetcdfDataset as specified in the request
 	*/
 	public static NetcdfDataset openDataset(final HttpServletRequest req,
-			final HttpServletResponse res) throws Exception {
+			final HttpServletResponse res, String datasetPath) throws Exception {
 
 		NetcdfFile netcdfFile = null;
 		NetcdfDataset dataset = null;
-		String datasetPath = req.getPathInfo();
+		//String datasetPath = req.getPathInfo();
 
 		if (datasetPath == null) { // passing in a dataset URL, presumably
 			// opendap
@@ -77,8 +75,7 @@ public class DatasetHandlerAdapter {
 		} else {
 
 			try {
-				netcdfFile = DatasetHandler
-						.getNetcdfFile(req, res, datasetPath);
+				netcdfFile = DatasetHandler.getNetcdfFile(req, res, datasetPath);
 
 				_log.debug("datasetPath: " + datasetPath + " netcdfFile location: " + netcdfFile.getLocation());
 		
