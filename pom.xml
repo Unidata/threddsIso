@@ -13,6 +13,18 @@
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
     </repository>
 
+    <repository>
+      <id>unidata-releases</id>
+      <name>UNIDATA Releases</name>
+      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+    </repository>
+
+    <repository>
+      <id>unidata-snapshots</id>
+      <name>UNIDATA Snapshots</name>
+      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
+    </repository>
+
   </repositories>
 
   <distributionManagement>
@@ -29,23 +41,6 @@
   </distributionManagement>
 
   <dependencies>
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>cdm</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- Introduces a cycle... -->
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>tds</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
-      <classifier>classes</classifier>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
@@ -70,18 +65,17 @@
       <version>${org.apache.commons-lang.version}</version>
     </dependency>
 
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>${org.springframework.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
       <version>${org.springframework.version}</version>
     </dependency>
-
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -95,6 +89,23 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- Introduces a cycle... -->
+    <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>cdm</artifactId>
+      <version>${edu.ucar.cdm.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>tds</artifactId>
+      <version>${edu.ucar.cdm.version}</version>
+      <classifier>classes</classifier>
+      <type>jar</type>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
