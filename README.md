@@ -9,15 +9,10 @@ This is the main threddsISO code repository.
 threddsISO provides the NcML, ISO 19115, and metadata rubric services available from the THREDDS Data Server ([TDS]).
 The code in this repository is used to build the [threddsIso artifacts][Maven_artifacts] ([snapshots][Maven_artifacts_snapshots]) that are distributed with the [TDS].
 
-
 This code is maintained and advanced by developers at NOAA/NGDC and at Unidata along with
 many contributions from the community of users.
 
-
 A command-line utility, [ncISO], is also available ([here][ncISO]) for automating metadata analysis and ISO metadata generation for THREDDS Catalogs.
-
-
-
 
 The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the larger
 ncISO/threddsISO community) to maintained and advance the project.
@@ -26,16 +21,18 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 ### Tags
 
-| TDS       | threddsISO | threddsISO |
-| Version   | Version    | Tag |
-|----------:|-----------:|----------------:|
-| TDS 4.5.4 | 2.2.3      | **2.2.3.tds.4.5.4** (coming soon) |
-| TDS 4.3   | 2.2.2      | **2.2.2.tds.4.3** |
-| TDS 4.2   | 2.0.2      | **2.0.2.tds.4.2** |
+| TDS Version        | threddsISO     | threddsISO Tag       |
+|:-------------------|:---------------|:---------------------|
+| TDS 4.6.0-SNAPSHOT | 2.2.5-SNAPSHOT | **not yet released** |
+| TDS 4.5.4          | 2.2.4          | **2.2.4.tds.4.5.4**  |
+| TDS 4.3            | 2.2.2          | **2.2.2.tds.4.3**    |
+| TDS 4.2            | 2.0.2          | **2.0.2.tds.4.2**    |
 
 ### Active Branches
 
-| TDS 4.5.4 | **tds-4.5.4** |
+| threddsIso branch | TDS Version            |
+|:------------------|:-----------------------|
+| master            | **tds-4.6.0-SNAPSHOT** |
 
 
 ## External Dependencies
