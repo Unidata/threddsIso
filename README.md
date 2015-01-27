@@ -1,3 +1,8 @@
+<a href="https://scan.coverity.com/projects/4054">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/4054/badge.svg"/>
+</a>
+
 # Unidata threddsISO Code Repository
 
 This is the main threddsISO code repository.
