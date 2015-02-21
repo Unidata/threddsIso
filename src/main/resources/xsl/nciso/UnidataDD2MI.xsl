@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2015-02-18. resolution value = missing when not available in NcML.</xd:p>
             <xd:p>2015-01-16. fixed date error to prevent replacement of all spaces (' ') with a 'T' in the dates certain cases.</xd:p>
             <xd:p>2014-11-25. fixed error that was outputting '::' at the end of a date.</xd:p>
             <xd:p>2014-09-24. 1) Change all gmd:protocol entries of "http" to the valid entry of "WWW:LINK". There is no "http" valid in the list of gmd:protocol valids maintained at https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) gmd:protocol was missing from the NCDC climate and weather toolkit. I have added this entry with a value of "WWW:LINK".</xd:p>
@@ -15,7 +16,7 @@
             <xd:p> May 10, 2012 version 2.3 authored by Ted Habermann</xd:p>
         </xd:desc>
     </xd:doc>
-    <xsl:variable name="stylesheetVersion" select="'2.3.2'"/>
+    <xsl:variable name="stylesheetVersion" select="'2.3.3'"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:strip-space elements="*"/>
     <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'"/>
@@ -1483,8 +1484,9 @@
                             </gco:Measure>
                         </xsl:when>
                         <xsl:when test="$dimensionUnits and not($dimensionResolution)">
+                            <xsl:attribute name="gco:nilReason">missing</xsl:attribute>
                             <!-- Modified on 2014-07-17-->
-                            <gco:Measure>
+                            <!-- <gco:Measure>
                                 <xsl:attribute name="uom">
                                     <xsl:choose>
                                         <xsl:when test="contains($dimensionUnits, 'seconds')">seconds</xsl:when>
@@ -1494,7 +1496,7 @@
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:attribute>
-                            </gco:Measure>
+                            </gco:Measure>-->
                         </xsl:when>
                         <xsl:when test="not($dimensionUnits) and $dimensionResolution">
                             <gco:Measure>
