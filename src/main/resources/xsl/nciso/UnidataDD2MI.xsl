@@ -178,7 +178,7 @@
             </xsl:attribute>
             <gmd:fileIdentifier>
                 <xsl:call-template name="writeCharacterString">
-                    <xsl:with-param name="stringToWrite" select="concat($identifierNameSpace[1], '.', $id[1])"/>
+                    <xsl:with-param name="stringToWrite" select="concat($identifierNameSpace[1], ':', $id[1])"/>
                 </xsl:call-template>
             </gmd:fileIdentifier>
             <gmd:language>
