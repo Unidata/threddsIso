@@ -38,6 +38,7 @@ import ucar.ma2.Array;
 import ucar.nc2.Attribute;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
+import ucar.nc2.constants.CF;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -68,263 +69,349 @@ public class ThreddsExtentUtil {
 		return ext;
 	}
 
-	private static boolean isLatCoord(Attribute att) {
-		if (att.getName().equals("standard_name")
-				&& (att.getStringValue().equals("latitude") || att
-						.getStringValue().equals("grid_latitude")))
-			return true;
+    private static boolean variableHasAttribute(Variable var, String attribute, String... values) {
+        if (values == null || values.length == 0) {
+            return false;
+        }
+        Attribute attr = var.findAttributeIgnoreCase(attribute);
+        if (attr == null) {
+            return false;
+        }
+        String attrValue = attr.getStringValue();
+        if (attrValue == null) {
+            return false;
+        }
+        for (String value : values) {
+            if (attrValue.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		if (att.getName().equals("units")
-				&& (att.getStringValue().equals("degrees_north")))
-			return true;
+    private static boolean variableHasFullName(Variable var, String... varNames) {
+        if (varNames == null || varNames.length == 0) {
+            return false;
+        }
+        for (String varName : varNames) {
+            if (var.getFullName().equalsIgnoreCase(varName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		return false;
-	}
+    private static boolean variableHasStdName(Variable var, String... stdNames) {
+        return variableHasAttribute(var, CF.STANDARD_NAME, stdNames);
+    }
 
-	private static boolean isLonCoord(Attribute att) {
-		if (att.getName().equals("standard_name")
-				&& (att.getStringValue().equals("longitude") || att
-						.getStringValue().equals("grid_longitude")))
-			return true;
-		if (att.getName().equals("units")
-				&& (att.getStringValue().equals("degrees_east")))
-			return true;
-		return false;
-	}
+    
+    private static boolean variableHasUnits(Variable var, String... unitsArr) {
+        return variableHasAttribute(var, "units", unitsArr);        
+    }
 
-	private static Extent doGetExtent(final NetcdfDataset ncd) throws Exception {
-		double maxLon = -9999.999;
-		double minLon = 9999.999;
-		double maxLat = -9999.999;
-		double minLat = 9999.999;
-		String latUnits = null;
-		String lonUnits = null;
+    private static Variable findLatVar(List<Variable> vars) {
+        //search using standard name first
+        for (Variable var : vars) {
+            if (variableHasStdName(var, "latitude", "grid_latitude")) {
+                return var;
+            }
+        }
+        //now search using units
+        for (Variable var : vars) {
+            if (variableHasUnits(var, "degrees_north")) {
+                return var;
+            }
+        }
+        return null;
+    }
 
-		Extent ext = new Extent();
+    private static Variable findLonVar(List<Variable> vars) {
+        //search using standard name first
+        for (Variable var : vars) {
+            if (variableHasStdName(var, "longitude", "grid_longitude")) {
+                return var;
+            }
+        }
+        //now search using units
+        for (Variable var : vars) {
+            if (variableHasUnits(var, "degrees_east")) {
+                return var;
+            }
+        }
+        return null;
+    }
 
-		List<CoordinateAxis> coordAxes = ncd.getCoordinateAxes();
-		try {
-			List<Variable> vars = ncd.getVariables();
-			for (Variable var : vars) {
-				List<Attribute> atts = var.getAttributes();
-				for (Attribute att : atts) {
+    private static CoordinateAxis findAxisByType(List<CoordinateAxis> coordAxes, AxisType axisType) {
+        for (CoordinateAxis axis : coordAxes) {
+            if (axis.getAxisType() == axisType) {
+                return axis;
+            }
+        }
+        return null;
+    }
+    
+    private static CoordinateAxis findTimeAxis(List<CoordinateAxis> coordAxes) {
+        //search using standard name first
+        for (CoordinateAxis axis : coordAxes) {
+            if (axis.getAxisType() == AxisType.Time && variableHasStdName(axis, CF.TIME)) {
+                return axis;
+            }
+        }
+        //now search using var name
+        for (CoordinateAxis axis : coordAxes) {
+            if (axis.getAxisType() == AxisType.Time && variableHasFullName(axis, "TIME")) {
+                return axis;
+            }
+        }
+        return null;
+    }
 
-					if (isLatCoord(att)) {
-						latUnits = var.getUnitsString();
-						Array vals = var.read();
-						long latSize = vals.getSize();
-						for (int i = 0; i < vals.getSize(); i++) {
+    private static CoordinateAxis findHeightAxis(List<CoordinateAxis> coordAxes) {
+        //search using standard name first
+        for (CoordinateAxis axis : coordAxes) {
+            if (axis.getAxisType() == AxisType.Height
+                    && variableHasStdName(axis, "depth", "height", "altitude")) {
+                return axis;
+            }
+        }
+        //now search using var name
+        for (CoordinateAxis axis : coordAxes) {
+            if (axis.getAxisType() == AxisType.Height
+                    && variableHasFullName(axis, "depth", "height", "altitude", "z")) {
+                return axis;
+            }
+        }
+        return null;
+    }
 
-							double lat = vals.getDouble(i);
-							// System.out.println("lat=" + lat);
+    private static Extent doGetExtent(final NetcdfDataset ncd) throws Exception {
+        double maxLon = -9999.999;
+        double minLon = 9999.999;
+        double maxLat = -9999.999;
+        double minLat = 9999.999;
+        String latUnits = null;
+        String lonUnits = null;
 
-							if (lat > maxLat) {
-								maxLat = lat;
-							}
-							if (lat < minLat) {
-								minLat = lat;
-							}
-						}
+        Extent ext = new Extent();
 
-						if (minLat != 9999.999)
-							ext._minLat = minLat;
-						if (maxLat != 9999.999)
-							ext._maxLat = maxLat;
-						ext._latRes = 0.0d;
-						if ((latSize - 1) > 0) {
-							ext._latRes = ((maxLat - minLat) / (latSize - 1));
-						}
-					}
+        List<CoordinateAxis> coordAxes = ncd.getCoordinateAxes();
+        List<Variable> vars = ncd.getVariables();		
+        try {
+            Variable latVar = findLatVar(vars);
+            if (latVar != null) {
+                latUnits = latVar.getUnitsString();
+                Array vals = latVar.read();
+                long latSize = vals.getSize();
+                for (int i = 0; i < vals.getSize(); i++) {
 
-					if (isLonCoord(att)) {
-						lonUnits = var.getUnitsString();
-						Array vals = var.read();
-						long lonSize = vals.getSize();
-						for (int i = 0; i < vals.getSize(); i++) {
+                    double lat = vals.getDouble(i);
+                    // System.out.println("lat=" + lat);
 
-							double lon = vals.getDouble(i);
-							// System.out.println("lon=" + lon);
+                    if (lat > maxLat) {
+                        maxLat = lat;
+                    }
+                    if (lat < minLat) {
+                        minLat = lat;
+                    }
+                }
 
-							if (lon > maxLon) {
-								maxLon = lon;
-							}
-							if (lon < minLon) {
-								minLon = lon;
-							}
-						}
+                if (minLat != 9999.999)
+                    ext._minLat = minLat;
+                if (maxLat != 9999.999)
+                    ext._maxLat = maxLat;
+                ext._latRes = 0.0d;
+                if ((latSize - 1) > 0) {
+                    ext._latRes = ((maxLat - minLat) / (latSize - 1));
+                }
+            }
 
-						if (minLon != 9999.999)
-							ext._minLon = minLon;
-						if (maxLon != 9999.999)
-							ext._maxLon = maxLon;
-						ext._lonRes = 0.0d;
-						if ((lonSize - 1) > 0) {
-							ext._lonRes = ((maxLat - minLat) / (lonSize - 1));
-						}
-					}
-				}
-			}
+            Variable lonVar = findLonVar(vars);
+            if (lonVar != null) {
+                lonUnits = lonVar.getUnitsString();
+                Array vals = lonVar.read();
+                long lonSize = vals.getSize();
+                for (int i = 0; i < vals.getSize(); i++) {
 
-			for (CoordinateAxis coordAxis : coordAxes) {
-				if ((coordAxis.getAxisType() == AxisType.Time)
-						&& (coordAxis.getFullName().equalsIgnoreCase("TIME"))) {
-					_log.info("numTimeElems=" + coordAxis.getSize());
-					_log.info("axisName=" + coordAxis.getFullName());
-					logAvailableMemory("Retrieving Time coordAxis values");
+                    double lon = vals.getDouble(i);
+                    // System.out.println("lon=" + lon);
 
-					ext._minTime = Double.toString(coordAxis.getMinValue());
-					ext._maxTime = Double.toString(coordAxis.getMaxValue());
+                    if (lon > maxLon) {
+                        maxLon = lon;
+                    }
+                    if (lon < minLon) {
+                        minLon = lon;
+                    }
+                }
 
-					// Add 2/8/2011
-					String rawMinTime = Double
-							.toString(coordAxis.getMinValue());
-					String rawMaxTime = Double
-							.toString(coordAxis.getMaxValue());
-					_log.info("udunits string = " + rawMinTime + " "
-							+ coordAxis.getUnitsString());
+                if (minLon != 9999.999)
+                    ext._minLon = minLon;
+                if (maxLon != 9999.999)
+                    ext._maxLon = maxLon;
+                ext._lonRes = 0.0d;
+                if ((lonSize - 1) > 0) {
+                    ext._lonRes = ((maxLat - minLat) / (lonSize - 1));
+                }
+            }
 
-					Date startDate = DateUnit.getStandardDate(rawMinTime + " "
-							+ coordAxis.getUnitsString());
-					Date endDate = DateUnit.getStandardDate(rawMaxTime + " "
-							+ coordAxis.getUnitsString());
-					DateFormatter df = new DateFormatter();
-					ext._minTime = df.toDateTimeStringISO(startDate);
-					ext._maxTime = df.toDateTimeStringISO(endDate);
-					// End Add 2/8/2011
+            CoordinateAxis timeAxis = findTimeAxis(coordAxes);
+            if (timeAxis != null) {
+                _log.info("numTimeElems=" + timeAxis.getSize());
+                _log.info("axisName=" + timeAxis.getFullName());
+                logAvailableMemory("Retrieving Time coordAxis values");
 
-					// Revised to get ISO Duration format
-					long duration = endDate.getTime() - startDate.getTime();
-					ext._timeDuration = DurationFormatUtils
-							.formatDurationISO(duration);
-					// System.out.println("duration in millisecs=" + duration);
-					// System.out.println("intervals =" +
-					// (coordAxis.getSize()-1));
-					// Revised resolution
-					double timeRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						timeRes = (duration / 1000) / (coordAxis.getSize() - 1);
-					}
-					ext._timeRes = Double.toString(timeRes);
-					ext._timeUnits = "seconds";
-				}
+                ext._minTime = Double.toString(timeAxis.getMinValue());
+                ext._maxTime = Double.toString(timeAxis.getMaxValue());
 
-				if ((coordAxis.getAxisType() == AxisType.Height)
-						&& (coordAxis.getFullName().equalsIgnoreCase("DEPTH"))) {
-					// logAvailableMemory("Retrieving Height coordAxis values");
-					_log.info("axisName=" + coordAxis.getFullName());
-					ext._minHeight = coordAxis.getMinValue();
-					ext._maxHeight = coordAxis.getMaxValue();
-					ext._heightUnits = coordAxis.getUnitsString();
-					ext._vOrientation = coordAxis.getPositive();
-					ext._heightRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						ext._heightRes = ((coordAxis.getMaxValue() - coordAxis
-								.getMinValue()) / coordAxis.getSize() - 1);
-					}
-				}
+                // Add 2/8/2011
+                String rawMinTime = Double
+                        .toString(timeAxis.getMinValue());
+                String rawMaxTime = Double
+                        .toString(timeAxis.getMaxValue());
+                _log.info("udunits string = " + rawMinTime + " "
+                        + timeAxis.getUnitsString());
 
-			}
-		} catch (Exception e) {
-			_log.error("Error in doGetExtent", e);
-		}
+                Date startDate = DateUnit.getStandardDate(rawMinTime + " "
+                        + timeAxis.getUnitsString());
+                Date endDate = DateUnit.getStandardDate(rawMaxTime + " "
+                        + timeAxis.getUnitsString());
+                DateFormatter df = new DateFormatter();
+                ext._minTime = df.toDateTimeStringISO(startDate);
+                ext._maxTime = df.toDateTimeStringISO(endDate);
+                // End Add 2/8/2011
 
-		return ext;
-	}
+                // Revised to get ISO Duration format
+                long duration = endDate.getTime() - startDate.getTime();
+                ext._timeDuration = DurationFormatUtils
+                        .formatDurationISO(duration);
+                // System.out.println("duration in millisecs=" + duration);
+                // System.out.println("intervals =" +
+                // (coordAxis.getSize()-1));
+                // Revised resolution
+                double timeRes = 0.0d;
+                if ((timeAxis.getSize() - 1) > 0) {
+                    timeRes = (duration / 1000) / (timeAxis.getSize() - 1);
+                }
+                ext._timeRes = Double.toString(timeRes);
+                ext._timeUnits = "seconds";			    
+            }
 
-	private static Extent doGetExtentByAxis(final NetcdfDataset ncd)
-			throws Exception {
-		Extent ext = new Extent();
+            CoordinateAxis heightAxis = findHeightAxis(coordAxes);
+            if (heightAxis != null) {
+                // logAvailableMemory("Retrieving Height coordAxis values");
+                _log.info("axisName=" + heightAxis.getFullName());
+                ext._minHeight = heightAxis.getMinValue();
+                ext._maxHeight = heightAxis.getMaxValue();
+                ext._heightUnits = heightAxis.getUnitsString();
+                ext._vOrientation = heightAxis.getPositive();
+                ext._heightRes = 0.0d;
+                if ((heightAxis.getSize() - 1) > 0) {
+                    ext._heightRes = ((heightAxis.getMaxValue() - heightAxis
+                            .getMinValue()) / (heightAxis.getSize() - 1));
+                }
+            }
+        } catch (Exception e) {
+            _log.error("Error in doGetExtent", e);
+        }
 
-		List<CoordinateAxis> coordAxes = ncd.getCoordinateAxes();
-		try {
-			for (CoordinateAxis coordAxis : coordAxes) {
+        return ext;
+    }
 
-				if (coordAxis.getAxisType() == AxisType.Lat) {
-					// logAvailableMemory("Retrieving Lat coordAxis values");
-					ext._minLat = coordAxis.getMinValue();
-					ext._maxLat = coordAxis.getMaxValue();
-					ext._latUnits = coordAxis.getUnitsString();
-					ext._latRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						ext._latRes = ((coordAxis.getMaxValue() - coordAxis
-								.getMinValue()) / (coordAxis.getSize() - 1));
-					}
-				}
-				if (coordAxis.getAxisType() == AxisType.Lon) {
-					// logAvailableMemory("Retrieving Lon coordAxis values");
-					ext._minLon = coordAxis.getMinValue();
-					ext._maxLon = coordAxis.getMaxValue();
-					ext._lonUnits = coordAxis.getUnitsString();
-					ext._lonRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						ext._lonRes = ((coordAxis.getMaxValue() - coordAxis
-								.getMinValue()) / (coordAxis.getSize() - 1));
-					}
-				}
-				if ((coordAxis.getAxisType() == AxisType.Time)
-						&& (coordAxis.getFullName().equalsIgnoreCase("TIME"))) {
-					_log.info("numTimeElems=" + coordAxis.getSize());
-					_log.info("axisName=" + coordAxis.getFullName());
-					logAvailableMemory("Retrieving Time coordAxis values");
+    private static Extent doGetExtentByAxis(final NetcdfDataset ncd)
+            throws Exception {
+        Extent ext = new Extent();
 
-					ext._minTime = Double.toString(coordAxis.getMinValue());
-					ext._maxTime = Double.toString(coordAxis.getMaxValue());
+        List<CoordinateAxis> coordAxes = ncd.getCoordinateAxes();
 
-					// Add 2/8/2011
-					String rawMinTime = Double
-							.toString(coordAxis.getMinValue());
-					String rawMaxTime = Double
-							.toString(coordAxis.getMaxValue());
-					_log.info("udunits string = " + rawMinTime + " "
-							+ coordAxis.getUnitsString());
+        try {
+            CoordinateAxis timeAxis = findTimeAxis(coordAxes);
+            if (timeAxis != null) {
+                _log.info("numTimeElems=" + timeAxis.getSize());
+                _log.info("axisName=" + timeAxis.getFullName());
+                logAvailableMemory("Retrieving Time coordAxis values");
 
-					Date startDate = DateUnit.getStandardDate(rawMinTime + " "
-							+ coordAxis.getUnitsString());
-					Date endDate = DateUnit.getStandardDate(rawMaxTime + " "
-							+ coordAxis.getUnitsString());
-					DateFormatter df = new DateFormatter();
-					ext._minTime = df.toDateTimeStringISO(startDate);
-					ext._maxTime = df.toDateTimeStringISO(endDate);
-					// End Add 2/8/2011
+                ext._minTime = Double.toString(timeAxis.getMinValue());
+                ext._maxTime = Double.toString(timeAxis.getMaxValue());
 
-					// Revised to get ISO Duration format
-					long duration = endDate.getTime() - startDate.getTime();
-					ext._timeDuration = DurationFormatUtils
-							.formatDurationISO(duration);
-					// System.out.println("duration in millisecs=" + duration);
-					// System.out.println("intervals =" +
-					// (coordAxis.getSize()-1));
-					// Revised resolution
-					double timeRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						timeRes = (duration / 1000) / (coordAxis.getSize() - 1);
-					}
-					ext._timeRes = Double.toString(timeRes);
-					ext._timeUnits = "seconds";
-				}
+                // Add 2/8/2011
+                String rawMinTime = Double
+                        .toString(timeAxis.getMinValue());
+                String rawMaxTime = Double
+                        .toString(timeAxis.getMaxValue());
+                _log.info("udunits string = " + rawMinTime + " "
+                        + timeAxis.getUnitsString());
 
-				if ((coordAxis.getAxisType() == AxisType.Height)
-						&& (coordAxis.getFullName().equalsIgnoreCase("DEPTH"))) {
-					// logAvailableMemory("Retrieving Height coordAxis values");
-					_log.info("axisName=" + coordAxis.getFullName());
-					ext._minHeight = coordAxis.getMinValue();
-					ext._maxHeight = coordAxis.getMaxValue();
-					ext._heightUnits = coordAxis.getUnitsString();
-					ext._vOrientation = coordAxis.getPositive();
-					ext._heightRes = 0.0d;
-					if ((coordAxis.getSize() - 1) > 0) {
-						ext._heightRes = ((coordAxis.getMaxValue() - coordAxis
-								.getMinValue()) / coordAxis.getSize() - 1);
-					}
-				}
+                Date startDate = DateUnit.getStandardDate(rawMinTime + " "
+                        + timeAxis.getUnitsString());
+                Date endDate = DateUnit.getStandardDate(rawMaxTime + " "
+                        + timeAxis.getUnitsString());
+                DateFormatter df = new DateFormatter();
+                ext._minTime = df.toDateTimeStringISO(startDate);
+                ext._maxTime = df.toDateTimeStringISO(endDate);
+                // End Add 2/8/2011
 
-			}
-		} catch (Exception e) {
-			_log.error("Error in doGetExtentByAxis", e);
-		}
+                // Revised to get ISO Duration format
+                long duration = endDate.getTime() - startDate.getTime();
+                ext._timeDuration = DurationFormatUtils
+                        .formatDurationISO(duration);
+                // System.out.println("duration in millisecs=" + duration);
+                // System.out.println("intervals =" +
+                // (coordAxis.getSize()-1));
+                // Revised resolution
+                double timeRes = 0.0d;
+                if ((timeAxis.getSize() - 1) > 0) {
+                    timeRes = (duration / 1000) / (timeAxis.getSize() - 1);
+                }
+                ext._timeRes = Double.toString(timeRes);
+                ext._timeUnits = "seconds";            
+            }
 
-		return ext;
-	}
+            CoordinateAxis latAxis = findAxisByType(coordAxes, AxisType.Lat);
+            if (latAxis != null) {
+                // logAvailableMemory("Retrieving Lat coordAxis values");
+                ext._minLat = latAxis.getMinValue();
+                ext._maxLat = latAxis.getMaxValue();
+                ext._latUnits = latAxis.getUnitsString();
+                ext._latRes = 0.0d;
+                if ((latAxis.getSize() - 1) > 0) {
+                    ext._latRes = ((latAxis.getMaxValue() - latAxis
+                            .getMinValue()) / (latAxis.getSize() - 1));
+                }
+            }
+
+            CoordinateAxis lonAxis = findAxisByType(coordAxes, AxisType.Lon);
+            if (lonAxis != null) {
+                // logAvailableMemory("Retrieving Lon coordAxis values");
+                ext._minLon = lonAxis.getMinValue();
+                ext._maxLon = lonAxis.getMaxValue();
+                ext._lonUnits = lonAxis.getUnitsString();
+                ext._lonRes = 0.0d;
+                if ((lonAxis.getSize() - 1) > 0) {
+                    ext._lonRes = ((lonAxis.getMaxValue() - lonAxis
+                            .getMinValue()) / (lonAxis.getSize() - 1));
+                }            
+            }
+
+            CoordinateAxis heightAxis = findHeightAxis(coordAxes);
+            if (heightAxis != null) {
+                // logAvailableMemory("Retrieving Height coordAxis values");
+                _log.info("axisName=" + heightAxis.getFullName());
+                ext._minHeight = heightAxis.getMinValue();
+                ext._maxHeight = heightAxis.getMaxValue();
+                ext._heightUnits = heightAxis.getUnitsString();
+                ext._vOrientation = heightAxis.getPositive();
+                ext._heightRes = 0.0d;
+                if ((heightAxis.getSize() - 1) > 0) {
+                    ext._heightRes = ((heightAxis.getMaxValue() - heightAxis
+                            .getMinValue()) / (heightAxis.getSize() - 1));
+                }
+            }            
+        } catch (Exception e) {
+            _log.error("Error in doGetExtentByAxis", e);
+        }
+
+        return ext;
+    }
 
 	/**
 	 * Creates a spatial extent based upon a given url for a NetCDFDataset.
