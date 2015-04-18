@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nc="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2" exclude-result-prefixes="nc">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nc="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2" exclude-result-prefixes="nc">
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
@@ -175,10 +175,15 @@
         <gmi:MI_Metadata>
             <xsl:attribute name="xsi:schemaLocation">
                 <xsl:value-of select="'http://www.isotc211.org/2005/gmi http://www.ngdc.noaa.gov/metadata/published/xsd/schema.xsd'"/>
-            </xsl:attribute>
+            </xsl:attribute>            
             <gmd:fileIdentifier>
                 <xsl:call-template name="writeCharacterString">
-                    <xsl:with-param name="stringToWrite" select="concat($identifierNameSpace[1], ':', $id[1])"/>
+                    <xsl:with-param name="stringToWrite">
+                        <xsl:choose>
+                            <xsl:when test="$identifierNameSpace"><xsl:value-of select="concat($identifierNameSpace[1],':',$id[1])"/></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="$id[1]"/></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:with-param>
                 </xsl:call-template>
             </gmd:fileIdentifier>
             <gmd:language>
@@ -1079,7 +1084,7 @@
     <xsl:template name="writeCharacterString">
         <xsl:param name="stringToWrite"/>
         <xsl:choose>
-            <xsl:when test="$stringToWrite">
+            <xsl:when test="normalize-space($stringToWrite)">
                 <gco:CharacterString>
                     <xsl:value-of select="$stringToWrite"/>
                 </gco:CharacterString>
