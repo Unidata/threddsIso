@@ -1,43 +1,36 @@
 package thredds.server.metadata.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import thredds.server.metadata.bean.Extent;
 
 public class ThreddsExtentUtilTest {
     private Extent getExtent(String file) throws Exception {
         return ThreddsExtentUtil.getExtent("file:src/test/resources/extent/" + file + ".ncml");
     }
-    
+
     @Test
     public void testExtent() throws Exception {
-        Extent extent = getExtent("test");
-        validateExtent(extent);
-
-        assertEquals("up", extent._vOrientation);
-        assertEquals(-10.0, extent._minHeight, 1E-20);
-        assertEquals(0.0, extent._maxHeight, 1E-20);
+        validateExtent(getExtent("test"));
     }
 
     @Test
     public void testExtentPositiveDown() throws Exception {
-        Extent extent = getExtent("test_positive_down");
-        validateExtent(extent);
-
-        assertEquals("down", extent._vOrientation);
-        assertEquals(0.0, extent._minHeight, 1E-20);
-        assertEquals(10.0, extent._maxHeight, 1E-20);
+        validateExtent(getExtent("test_positive_down"));
     }
 
     @Test
     public void testExtentStandardNames() throws Exception {
-        Extent extent = getExtent("test_standard_names");
-        validateExtent(extent);
+        validateExtent(getExtent("test_standard_names"));
+    }
 
-        assertEquals("up", extent._vOrientation);
-        assertEquals(-10.0, extent._minHeight, 1E-20);
-        assertEquals(0.0, extent._maxHeight, 1E-20);
+    @Test
+    public void testExtentMultipleTimeStdNames() throws Exception {
+        validateExtent(getExtent("test_multiple_time_std_names"));
     }
 
     private void validateExtent(Extent extent) throws Exception {
@@ -59,5 +52,15 @@ public class ThreddsExtentUtilTest {
 
         assertEquals(10.0, extent._heightRes, 1E-20);
         assertEquals("meters", extent._heightUnits);
+        assertNotNull(extent._vOrientation);
+        if (extent._vOrientation.equalsIgnoreCase("up")) {
+            assertEquals(-10.0, extent._minHeight, 1E-20);
+            assertEquals(0.0, extent._maxHeight, 1E-20);
+        } else if (extent._vOrientation.equalsIgnoreCase("down")) {
+            assertEquals(0.0, extent._minHeight, 1E-20);
+            assertEquals(10.0, extent._maxHeight, 1E-20);
+        } else {
+            fail("Invalid vOrientation value: " + extent._vOrientation);
+        }
     }
 }

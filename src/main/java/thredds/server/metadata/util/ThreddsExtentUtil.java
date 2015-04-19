@@ -33,6 +33,8 @@ import java.util.List;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
+import com.google.common.collect.Lists;
+
 import thredds.server.metadata.bean.Extent;
 import ucar.ma2.Array;
 import ucar.nc2.Attribute;
@@ -153,15 +155,30 @@ public class ThreddsExtentUtil {
     
     private static CoordinateAxis findTimeAxis(List<CoordinateAxis> coordAxes) {
         //search using standard name first
+        List<CoordinateAxis> timeAxes = Lists.newArrayList();
         for (CoordinateAxis axis : coordAxes) {
             if (axis.getAxisType() == AxisType.Time && variableHasStdName(axis, CF.TIME)) {
-                return axis;
+                timeAxes.add(axis);
             }
         }
-        //now search using var name
-        for (CoordinateAxis axis : coordAxes) {
-            if (axis.getAxisType() == AxisType.Time && variableHasFullName(axis, "TIME")) {
-                return axis;
+        if (timeAxes.size() == 1) {
+            //one std name match, return match
+            return timeAxes.get(0);
+        } else if (timeAxes.size() > 1) {
+            //multiple std name matches, look for variable named "time"
+            for (CoordinateAxis timeAxis : timeAxes) {
+                if (variableHasFullName(timeAxis, "TIME")) {
+                    return timeAxis;
+                }
+            }
+            //no "time" variable found, return first found "time" std name
+            return timeAxes.get(0);
+        } else {
+            //no std name matches, search using var name
+            for (CoordinateAxis axis : coordAxes) {
+                if (axis.getAxisType() == AxisType.Time && variableHasFullName(axis, "TIME")) {
+                    return axis;
+                }
             }
         }
         return null;
@@ -190,8 +207,6 @@ public class ThreddsExtentUtil {
         double minLon = 9999.999;
         double maxLat = -9999.999;
         double minLat = 9999.999;
-        String latUnits = null;
-        String lonUnits = null;
 
         Extent ext = new Extent();
 
@@ -200,7 +215,7 @@ public class ThreddsExtentUtil {
         try {
             Variable latVar = findLatVar(vars);
             if (latVar != null) {
-                latUnits = latVar.getUnitsString();
+                ext._latUnits = latVar.getUnitsString();
                 Array vals = latVar.read();
                 long latSize = vals.getSize();
                 for (int i = 0; i < vals.getSize(); i++) {
@@ -228,7 +243,7 @@ public class ThreddsExtentUtil {
 
             Variable lonVar = findLonVar(vars);
             if (lonVar != null) {
-                lonUnits = lonVar.getUnitsString();
+                ext._lonUnits = lonVar.getUnitsString();
                 Array vals = lonVar.read();
                 long lonSize = vals.getSize();
                 for (int i = 0; i < vals.getSize(); i++) {
