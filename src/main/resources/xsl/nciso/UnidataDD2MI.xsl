@@ -175,15 +175,10 @@
         <gmi:MI_Metadata>
             <xsl:attribute name="xsi:schemaLocation">
                 <xsl:value-of select="'http://www.isotc211.org/2005/gmi http://www.ngdc.noaa.gov/metadata/published/xsd/schema.xsd'"/>
-            </xsl:attribute>            
+            </xsl:attribute>
             <gmd:fileIdentifier>
                 <xsl:call-template name="writeCharacterString">
-                    <xsl:with-param name="stringToWrite">
-                        <xsl:choose>
-                            <xsl:when test="$identifierNameSpace"><xsl:value-of select="concat($identifierNameSpace[1],':',$id[1])"/></xsl:when>
-                            <xsl:otherwise><xsl:value-of select="$id[1]"/></xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:with-param>
+                    <xsl:with-param name="stringToWrite" select="concat($identifierNameSpace[1], '.', $id[1])"/>
                 </xsl:call-template>
             </gmd:fileIdentifier>
             <gmd:language>
@@ -1084,7 +1079,7 @@
     <xsl:template name="writeCharacterString">
         <xsl:param name="stringToWrite"/>
         <xsl:choose>
-            <xsl:when test="normalize-space($stringToWrite)">
+            <xsl:when test="$stringToWrite">
                 <gco:CharacterString>
                     <xsl:value-of select="$stringToWrite"/>
                 </gco:CharacterString>
