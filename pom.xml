@@ -101,6 +101,13 @@
 
     <dependency>
       <groupId>edu.ucar</groupId>
+      <artifactId>tdcommon</artifactId>
+      <version>${edu.ucar.cdm.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.ucar</groupId>
       <artifactId>tds</artifactId>
       <version>${edu.ucar.cdm.version}</version>
       <classifier>classes</classifier>
