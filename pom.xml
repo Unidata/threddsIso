@@ -5,7 +5,7 @@
   <groupId>EDS</groupId>
   <artifactId>threddsIso</artifactId>
   <packaging>jar</packaging>
-  <version>2.2.6</version>
+  <version>2.2.6-SNAPSHOT</version>
   <repositories>
 
     <repository>
