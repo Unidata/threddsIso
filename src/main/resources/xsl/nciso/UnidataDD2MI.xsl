@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2015-07-28. update //srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName to provide appropriate lookup from https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable.csv to align with OGC CSW ISO Application Profile Table 14 apiso:ServiceType semantics. Tom Kralidis</xd:p>
             <xd:p>2015-04-22. v2.3.4. concat naming_authority and id in fileIdentifier; change XSLT version to 1.0.</xd:p>
             <xd:p>2015-02-18. resolution value = missing when not available in NcML.</xd:p>
             <xd:p>2015-01-16. fixed date error to prevent replacement of all spaces (' ') with a 'T' in the dates certain cases.</xd:p>
@@ -1703,7 +1704,7 @@
                 </gmd:abstract>
                 <srv:serviceType>
                     <gco:LocalName>
-                        <xsl:value-of select="$serviceTypeName"/>
+                        <xsl:value-of select="$operationProtocol"/>
                     </gco:LocalName>
                 </srv:serviceType>
                 <srv:extent>
