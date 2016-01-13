@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2016-01-13. Allow gmd:MD_TopicCategoryCode to have values other than "climateMeteorologyAtmosphere" by pulling NetCDF global attribute "ISO_Topic_Category" if available.</xd:p>
             <xd:p>2015-07-28. update //srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName to provide appropriate lookup from https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable.csv to align with OGC CSW ISO Application Profile Table 14 apiso:ServiceType semantics. Tom Kralidis</xd:p>
             <xd:p>2015-04-22. v2.3.4. concat naming_authority and id in fileIdentifier; change XSLT version to 1.0.</xd:p>
             <xd:p>2015-02-18. resolution value = missing when not available in NcML.</xd:p>
@@ -36,6 +37,8 @@
     <xsl:variable name="metadataConvention" as="xs:string*" select="/nc:netcdf/nc:attribute[@name='Metadata_Conventions']/@value"/>
     <xsl:variable name="metadataLink" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='Metadata_Link']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:group[@name='document']/nc:attribute[@name='xlink']/@value)"/>
+    <xsl:variable name="ISOTopicCategory" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='ISO_Topic_Category']/@value,
+    'climatologyMeteorologyAtmosphere')"/>
     <!-- Service Fields: 4 possible -->
     <xsl:variable name="thredds_netcdfsubsetCnt" select="count(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='nccs_service'])"/>
     <xsl:variable name="thredds_opendapCnt" select="count(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='opendap_service'])"/>
@@ -654,7 +657,7 @@
                         <gco:CharacterString>eng</gco:CharacterString>
                     </gmd:language>
                     <gmd:topicCategory>
-                        <gmd:MD_TopicCategoryCode>climatologyMeteorologyAtmosphere</gmd:MD_TopicCategoryCode>
+                        <gmd:MD_TopicCategoryCode><xsl:value-of select="$ISOTopicCategory"/></gmd:MD_TopicCategoryCode>
                     </gmd:topicCategory>
                     <gmd:extent>
                         <xsl:choose>
