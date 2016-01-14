@@ -669,7 +669,7 @@
                     <xsl:for-each select="tokenize($ISOTopicCategories[1],$topicDelimiter)">
                       <gmd:topicCategory>
                         <gmd:MD_TopicCategoryCode>
-                          <xsl:value-of select="."/>
+                          <xsl:value-of select="normalize-space(.)"/>
                         </gmd:MD_TopicCategoryCode>
                       </gmd:topicCategory>
                     </xsl:for-each>
