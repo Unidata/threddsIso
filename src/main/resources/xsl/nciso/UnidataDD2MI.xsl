@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2016-02-09. Capture ACDD-1.3 suggested global attributes 'platform', 'platform_vocabulary', 'instrument', and 'instrument_vocabulary' as MD_Keywords.</xd:p>
             <xd:p>2016-01-13. Allow gmd:MD_TopicCategoryCode to have values other than "climateMeteorologyAtmosphere" by pulling NetCDF global attribute "ISO_Topic_Categories" if available.</xd:p>
             <xd:p>2015-07-28. update //srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName to provide appropriate lookup from https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable.csv to align with OGC CSW ISO Application Profile Table 14 apiso:ServiceType semantics. Tom Kralidis</xd:p>
             <xd:p>2015-04-22. v2.3.4. concat naming_authority and id in fileIdentifier; change XSLT version to 1.0.</xd:p>
@@ -48,7 +49,7 @@
     <xsl:variable name="thredds_httpCnt" select="count(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='services']/nc:attribute[@name='httpserver_service'])"/>
     <xsl:variable name="serviceTotal" select="$thredds_netcdfsubsetCnt + $thredds_opendapCnt + $thredds_wcsCnt + $thredds_wmsCnt + $thredds_sosCnt + $thredds_httpCnt"/>
     <xsl:variable name="serviceMax">5</xsl:variable>
-    <!-- Text Search Fields: 7 possible -->
+    <!-- Text Search Fields: 11 possible -->
     <xsl:variable name="title" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='title']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:attribute[@name='full_name']/@value)"/>
     <xsl:variable name="summary" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='summary']/@value,
@@ -62,6 +63,15 @@
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:document/nc:attribute[@type='comment']/@value)"/>
     <xsl:variable name="history" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='history']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:document/nc:attribute[@type='history']/@value)"/>
+    <!-- Added platform, platform_vocabulary, instrument, and instrument_vocabulary on 2016-02-09. -->
+    <xsl:variable name="platform" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='platform']/@value,
+        /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='platform']/@value)"/>
+    <xsl:variable name="platformVocabulary" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='platform_vocabulary']/@value,
+        /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='platform']/nc:attribute[@name='vocab']/@value)"/>
+    <xsl:variable name="instrument" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='instrument']/@value,
+        /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='instrument']/@value)"/>
+    <xsl:variable name="instrumentVocabulary" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='instrument_vocabulary']/@value,
+        /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='instrument']/nc:attribute[@name='vocab']/@value)"/>
     <!--jmaurer-->
     <xsl:variable name="places" select="(/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='vocab'])"/>
     <!-- Extent Search Fields: 17 possible -->
@@ -460,6 +470,97 @@
                                         <gmd:title>
                                             <xsl:call-template name="writeCharacterString">
                                                 <xsl:with-param name="stringToWrite" select="$keywordsVocabulary[1]"/>
+                                            </xsl:call-template>
+                                        </gmd:title>
+                                        <gmd:date>
+                                            <xsl:attribute name="gco:nilReason">
+                                                <xsl:value-of select="'unknown'"/>
+                                            </xsl:attribute>
+                                        </gmd:date>
+                                    </gmd:CI_Citation>
+                                </gmd:thesaurusName>
+                            </gmd:MD_Keywords>
+                        </gmd:descriptiveKeywords>
+                    </xsl:if>
+                    <!-- Added platform and instrument on 2016-02-09. -->
+                    <xsl:if test="count($platform)">
+                        <gmd:descriptiveKeywords>
+                            <gmd:MD_Keywords>
+                                <xsl:variable name="keywordDelimiter">
+                                    <xsl:choose>
+                                        <xsl:when test="(contains($platform[1],',') or
+                                            contains($platform[1],'&gt;'))">
+                                            <xsl:value-of select="','"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="' '"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:variable>
+                                <xsl:for-each select="tokenize($platform[1],$keywordDelimiter)">
+                                    <gmd:keyword>
+                                        <gco:CharacterString>
+                                            <xsl:value-of select="."/>
+                                        </gco:CharacterString>
+                                    </gmd:keyword>
+                                </xsl:for-each>
+                                <gmd:type>
+                                    <xsl:call-template name="writeCodelist">
+                                        <xsl:with-param name="codeListName" select="'gmd:MD_KeywordTypeCode'"/>
+                                        <xsl:with-param name="codeListValue" select="'platform'"/>
+                                    </xsl:call-template>
+                                </gmd:type>
+                                <gmd:thesaurusName>
+                                    <gmd:CI_Citation>
+                                        <gmd:title>
+                                            <xsl:call-template name="writeCharacterString">
+                                                <xsl:with-param name="stringToWrite"
+                                                    select="$platformVocabulary[1]"/>
+                                            </xsl:call-template>
+                                        </gmd:title>
+                                        <gmd:date>
+                                            <xsl:attribute name="gco:nilReason">
+                                                <xsl:value-of select="'unknown'"/>
+                                            </xsl:attribute>
+                                        </gmd:date>
+                                    </gmd:CI_Citation>
+                                </gmd:thesaurusName>
+                            </gmd:MD_Keywords>
+                        </gmd:descriptiveKeywords>
+                    </xsl:if>
+                    <xsl:if test="count($instrument)">
+                        <gmd:descriptiveKeywords>
+                            <gmd:MD_Keywords>
+                                <xsl:variable name="keywordDelimiter">
+                                    <xsl:choose>
+                                        <xsl:when test="(contains($instrument[1],',') or
+                                            contains($instrument[1],'&gt;'))">
+                                            <xsl:value-of select="','"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="' '"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:variable>
+                                <xsl:for-each select="tokenize($instrument[1],$keywordDelimiter)">
+                                    <gmd:keyword>
+                                        <gco:CharacterString>
+                                            <xsl:value-of select="."/>
+                                        </gco:CharacterString>
+                                    </gmd:keyword>
+                                </xsl:for-each>
+                                <gmd:type>
+                                    <xsl:call-template name="writeCodelist">
+                                        <xsl:with-param name="codeListName" select="'gmd:MD_KeywordTypeCode'"/>
+                                        <xsl:with-param name="codeListValue" select="'instrument'"/>
+                                    </xsl:call-template>
+                                </gmd:type>
+                                <gmd:thesaurusName>
+                                    <gmd:CI_Citation>
+                                        <gmd:title>
+                                            <xsl:call-template name="writeCharacterString">
+                                                <xsl:with-param name="stringToWrite"
+                                                    select="$instrumentVocabulary[1]"/>
                                             </xsl:call-template>
                                         </gmd:title>
                                         <gmd:date>
