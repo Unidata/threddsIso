@@ -445,7 +445,7 @@
                                 <xsl:for-each select="tokenize($keywords[1],$keywordDelimiter)">
                                     <gmd:keyword>
                                         <gco:CharacterString>
-                                            <xsl:value-of select="."/>
+                                            <xsl:value-of select="normalize-space(.)"/>
                                         </gco:CharacterString>
                                     </gmd:keyword>
                                 </xsl:for-each>
