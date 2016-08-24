@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -64,9 +65,9 @@ public class UddcController extends AbstractMetadataController implements Initia
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 		    .getLogger(UddcController.class);
 
-	static final AllowedServices as = new AllowedServices();
-	static final boolean _allow = as.isAllowed(StandardService.uddc);
 
+	@Autowired
+	private AllowedServices as;
 
 	protected String getPath() {
 		return _metadataServiceType + "/";
@@ -100,11 +101,9 @@ public class UddcController extends AbstractMetadataController implements Initia
 		NetcdfDataset netCdfDataset = null;
 
 		try {
-			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
-			//Workaround for now...
-			isAllowed(_allow, _metadataServiceType, res);
 			res.setContentType(ContentType.html.getContentHeader());
-
+			// If service not allowed, respond accordingly (403);
+			isAllowed(as.isAllowed(StandardService.iso), _metadataServiceType, res);
 			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
 				res.sendError(HttpServletResponse.SC_NOT_FOUND,

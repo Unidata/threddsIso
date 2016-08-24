@@ -57,6 +57,8 @@ import ucar.nc2.units.DateType;
 import ucar.nc2.units.TimeDuration;
 import ucar.unidata.util.StringUtil2;
 
+import static thredds.client.catalog.Dataset.CollectionType;
+
 /**
  * NCMLModifier
  * 
@@ -159,7 +161,7 @@ public class NCMLModifier {
 		if ((ids.getDataFormatType() != null) && (ids.getFeatureType() != FeatureType.ANY))
 			addElem(groupElem, "data_type", escaper.escape(ids.getDataFormatName()));
 
-    if ((ids.getCollectionType() != null) && (ids.getCollectionType() != CollectionType.NONE))
+    if (ids.getCollectionType() != null)
         addElem(groupElem, "collection_type", escaper.escape(ids.getCollectionType().toString()));
 		if (ids.getAuthority() != null)
 			addElem(groupElem, "authority", escaper.escape(ids.getAuthority()));

@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -63,8 +64,8 @@ import ucar.nc2.dataset.NetcdfDataset;
 public class IsoController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(IsoController.class);
 
-	static final AllowedServices as = new AllowedServices();
-	static final boolean _allow = as.isAllowed(StandardService.iso);
+	@Autowired
+	private AllowedServices as;
 
 	protected String getPath() {
 		return _metadataServiceType + "/";
@@ -101,9 +102,8 @@ public class IsoController extends AbstractMetadataController implements Initial
 		NetcdfDataset netCdfDataset = null;
 
 		try {
-			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
-			//Workaround for now...
-			isAllowed(_allow, _metadataServiceType, res);
+			// If service not allowed, respond accordingly (403);
+			isAllowed(as.isAllowed(StandardService.iso), _metadataServiceType, res);
 			res.setContentType(ContentType.xml.getContentHeader());
 			netCdfDataset = DatasetHandlerAdapter.openDataset(req, res, getInfoPath(req));
 			if (netCdfDataset == null) {
