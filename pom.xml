@@ -9,8 +9,8 @@
   <repositories>
 
     <repository>
-      <id>ibiblio-mirror</id>
-      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+      <id>maven central</id>
+      <url>https://repo1.maven.org/maven2/</url>
     </repository>
 
     <repository>
@@ -89,6 +89,12 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.collections</groupId>
+      <artifactId>google-collections</artifactId>
+      <version>1.0</version>
     </dependency>
 
     <!-- Introduces a cycle... -->
