@@ -3,13 +3,15 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
-            <xd:p>2016-01-13. Allow gmd:MD_TopicCategoryCode to have values other than "climateMeteorologyAtmosphere" by pulling NetCDF global attribute "ISO_Topic_Categories" if available.</xd:p>
+            <xd:p>2017-01-11. gmd:credit can pull from global attributes "acknowledgment" (UDDC) or "acknowledgement" (ACDD). John Maurer jmaurer@hawaii.edu</xd:p>
+            <xd:p>2016-02-26. Strip white space from before/after keywords. John Maurer jmaurer@hawaii.edu</xd:p>
+            <xd:p>2016-01-13. Allow gmd:MD_TopicCategoryCode to have values other than "climateMeteorologyAtmosphere" by pulling NetCDF global attribute "ISO_Topic_Categories" if available. John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2015-07-28. update //srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName to provide appropriate lookup from https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable.csv to align with OGC CSW ISO Application Profile Table 14 apiso:ServiceType semantics. Tom Kralidis</xd:p>
             <xd:p>2015-04-22. v2.3.4. concat naming_authority and id in fileIdentifier; change XSLT version to 1.0.</xd:p>
             <xd:p>2015-02-18. resolution value = missing when not available in NcML.</xd:p>
             <xd:p>2015-01-16. fixed date error to prevent replacement of all spaces (' ') with a 'T' in the dates certain cases.</xd:p>
             <xd:p>2014-11-25. fixed error that was outputting '::' at the end of a date.</xd:p>
-            <xd:p>2014-09-24. 1) Change all gmd:protocol entries of "http" to the valid entry of "WWW:LINK". There is no "http" valid in the list of gmd:protocol valids maintained at https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) gmd:protocol was missing from the NCDC climate and weather toolkit. I have added this entry with a value of "WWW:LINK".</xd:p>
+            <xd:p>2014-09-24. 1) Change all gmd:protocol entries of "http" to the valid entry of "WWW:LINK". There is no "http" valid in the list of gmd:protocol valids maintained at https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) gmd:protocol was missing from the NCDC climate and weather toolkit. I have added this entry with a value of "WWW:LINK". John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2014-09-05. 1) Adds gmd:protocol elements to all service end points (srv:SV_ServiceIdentification) identifying them as either OPeNDAP:OPeNDAP, UNIDATA:NCSS, OGC:WMS, OGC:WCS, or OGC:SOS--the appropriate valids from this list: https://github.com/OSGeo/Cat-Interop/blob/master/LinkPropertyLookupTable2.csv. 2) Add GCMD Location Keywords from THREDDS catalog metadata: all "geospatialCoverage > name" entries. 3) Adds each "viewer" entry from the THREDDS catalog metadata as an additional gmd:distributorTransferOptions. John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2014-07-24. test for null date and fixed another seconds since.... input. Translates UTC dates to ISO dateTime and 8601 basic dates to 8601 extended.</xd:p>
             <xd:p>2014-07-17. updated dimensionResolution to handle many but not all ISO 8601 durations</xd:p>
@@ -137,10 +139,11 @@
     <xsl:variable name="institution" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='institution']/@value)"/>
     <xsl:variable name="project" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='project']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='projects']/@value)"/>
-    <xsl:variable name="acknowledgment" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='acknowledgment']/@value,
+    <xsl:variable name="acknowledgement" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='acknowledgement']/@value,
+    /nc:netcdf/nc:attribute[@name='acknowledgment']/@value,
     /nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='documentation']/nc:group[@name='document']/nc:attribute[@type='funding']/@value)"/>
     <xsl:variable name="dateCnt" select="count($creatorDate) + count($modifiedDate) + count($issuedDate)"/>
-    <xsl:variable name="creatorTotal" select="count($creatorName) + count($creatorURL) + count($creatorEmail) + count($creatorDate) + count($modifiedDate) + count($issuedDate) + count($institution) + count($project) + count($acknowledgment)"/>
+    <xsl:variable name="creatorTotal" select="count($creatorName) + count($creatorURL) + count($creatorEmail) + count($creatorDate) + count($modifiedDate) + count($issuedDate) + count($institution) + count($project) + count($acknowledgement)"/>
     <xsl:variable name="creatorMax">9</xsl:variable>
     <!--  -->
     <xsl:variable name="contributorName" as="xs:string*" select="(/nc:netcdf/nc:attribute[@name='contributor_name']/@value,
@@ -412,10 +415,10 @@
                             <xsl:with-param name="stringToWrite" select="$summary[1]"/>
                         </xsl:call-template>
                     </gmd:abstract>
-                    <xsl:if test="count($acknowledgment)">
+                    <xsl:if test="count($acknowledgement)">
                         <gmd:credit>
                             <xsl:call-template name="writeCharacterString">
-                                <xsl:with-param name="stringToWrite" select="$acknowledgment[1]"/>
+                                <xsl:with-param name="stringToWrite" select="$acknowledgement[1]"/>
                             </xsl:call-template>
                         </gmd:credit>
                     </xsl:if>
