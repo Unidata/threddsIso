@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2017-01-26. Disable output escaping on location keywords to avoid double-escaping the "&gt;" separators to "&amp;gt;". John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2017-01-11. gmd:credit can pull from global attributes "acknowledgment" (UDDC) or "acknowledgement" (ACDD). John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2016-02-26. Strip white space from before/after keywords. John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2016-01-13. Allow gmd:MD_TopicCategoryCode to have values other than "climateMeteorologyAtmosphere" by pulling NetCDF global attribute "ISO_Topic_Categories" if available. John Maurer jmaurer@hawaii.edu</xd:p>
@@ -482,7 +483,7 @@
                                 <xsl:for-each select="/nc:netcdf/nc:group[@name='THREDDSMetadata']/nc:group[@name='vocab']/nc:attribute[@name='name']/@value">
                                     <gmd:keyword>
                                         <gco:CharacterString>
-                                            <xsl:value-of select="."/>
+                                            <xsl:value-of select="." disable-output-escaping="yes"/>
                                         </gco:CharacterString>
                                     </gmd:keyword>
                                 </xsl:for-each>
