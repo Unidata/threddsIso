@@ -28,6 +28,7 @@
  */
 package thredds.server.metadata.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,13 +61,18 @@ import ucar.unidata.util.StringUtil2;
 public class NCMLModifier {
   static private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NCMLModifier.class);
 	private String _openDapService = null;
-	private String _version = "2.2.2";
+	private String _version = "2.2.3";
+	private static DecimalFormat dFmt = new DecimalFormat(".#####");
 
 	/**
 	 * Class constructor.
 	 */
 	public NCMLModifier() {
 
+	}
+
+	public static String format(Double dbl) {
+		return dFmt.format(dbl.doubleValue());
 	}
 
 	/**
@@ -82,16 +88,16 @@ public class NCMLModifier {
 
 		// Geospatial
 		if (ext._minLon != null)
-			addElem(groupElem, "geospatial_lon_min", ext._minLon.toString(), "float");
+			addElem(groupElem, "geospatial_lon_min", format(ext._minLon), "float");
 		if (ext._minLat != null)
-			addElem(groupElem, "geospatial_lat_min", ext._minLat.toString(), "float");
+			addElem(groupElem, "geospatial_lat_min", format(ext._minLat), "float");
 		if (ext._maxLon != null)
-			addElem(groupElem, "geospatial_lon_max", ext._maxLon.toString(), "float");
+			addElem(groupElem, "geospatial_lon_max", format(ext._maxLon), "float");
 		if (ext._maxLat != null)
-			addElem(groupElem, "geospatial_lat_max", ext._maxLat.toString(), "float");
+			addElem(groupElem, "geospatial_lat_max", format(ext._maxLat), "float");
 		if (ext._lonUnits != null)
 			addElem(groupElem, "geospatial_lon_units", ext._lonUnits);
-    if (ext._latUnits != null)
+    	if (ext._latUnits != null)
 			addElem(groupElem, "geospatial_lat_units", ext._latUnits);
 		if (ext._lonRes != null)
 			addElem(groupElem, "geospatial_lon_resolution", ext._lonRes.toString());
@@ -148,7 +154,7 @@ public class NCMLModifier {
 		if ((ids.getDataType() != null) && (ids.getDataType() != FeatureType.ANY) && (ids.getDataType() != FeatureType.NONE))
 			addElem(groupElem, "data_type", StringUtil2.quoteHtmlContent(ids.getDataType().toString()));
 
-    if ((ids.getCollectionType() != null) && (ids.getCollectionType() != CollectionType.NONE))
+	    if ((ids.getCollectionType() != null) && (ids.getCollectionType() != CollectionType.NONE))
 			addElem(groupElem, "collection_type", StringUtil2.quoteXmlContent(ids.getCollectionType().toString()));
 
 		if (ids.getAuthority() != null)
