@@ -11,6 +11,8 @@ tds/content/
 *.iml
 *.iws
 .idea/
+out/
+lib/
 atlassian-ide-plugin.xml
 
 # Ignore Dreamweaver balogna
