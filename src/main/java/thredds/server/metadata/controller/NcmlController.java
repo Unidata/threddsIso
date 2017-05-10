@@ -39,10 +39,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import thredds.catalog.InvDataset;
+import thredds.client.catalog.Dataset;
+import thredds.core.AllowedServices;
+import thredds.core.StandardService;
 import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
-import thredds.servlet.ThreddsConfig;
 import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
@@ -55,7 +56,10 @@ import ucar.nc2.dataset.NetcdfDataset;
 @RequestMapping("/ncml/")
 public class NcmlController extends AbstractMetadataController implements InitializingBean {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(NcmlController.class);
-	
+
+	static final AllowedServices as = new AllowedServices();
+	static final boolean _allow = as.isAllowed(StandardService.iso_ncml);
+
 	protected String getPath() {
 		return _metadataServiceType + "/";
 	}
@@ -65,7 +69,6 @@ public class NcmlController extends AbstractMetadataController implements Initia
 		_metadataServiceType = "NCML";
 		_servletPath = "/ncml";
 		_logServerStartup.info("Metadata NCML - initialization start");
-		_allow = ThreddsConfig.getBoolean("NCISO.ncmlAllow", false);
 	    _logServerStartup.info("NCISO.ncmlAllow = "+ _allow);
 	}
 
@@ -92,7 +95,6 @@ public class NcmlController extends AbstractMetadataController implements Initia
 		try {
 			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
 			//Workaround for now...
-			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);			
 			isAllowed(_allow, _metadataServiceType, res);
 			res.setContentType(ContentType.xml.getContentHeader());
 
@@ -105,7 +107,7 @@ public class NcmlController extends AbstractMetadataController implements Initia
 				Writer writer = res.getWriter();
 
 				// Get Thredds level metadata if it exists
-				InvDataset ids = this.getThreddsDataset(req);
+				Dataset ids = this.getThreddsDataset(req, res);
 
 				// Enhance with file and dataset level metadata
 				EnhancedMetadataService.enhance(netCdfDataset, ids, writer);

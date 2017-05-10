@@ -34,7 +34,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import thredds.servlet.DatasetHandler;
+import thredds.core.TdsRequestedDataset;
 import thredds.servlet.ServletUtil;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -75,7 +75,7 @@ public class DatasetHandlerAdapter {
 		} else {
 
 			try {
-				netcdfFile = DatasetHandler.getNetcdfFile(req, res, datasetPath);
+				netcdfFile = TdsRequestedDataset.getNetcdfFile(req, res, datasetPath);
 
 				_log.debug("datasetPath: " + datasetPath + " netcdfFile location: " + netcdfFile.getLocation());
 		

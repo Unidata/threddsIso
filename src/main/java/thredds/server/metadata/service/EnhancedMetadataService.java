@@ -28,7 +28,7 @@
  */
 package thredds.server.metadata.service;
 
-import thredds.catalog.InvDataset;
+import thredds.client.catalog.Dataset;
 import thredds.server.metadata.bean.Extent;
 import thredds.server.metadata.util.ElementNameComparator;
 import thredds.server.metadata.util.NCMLModifier;
@@ -38,6 +38,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ncml.NcMLWriter;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.List;
@@ -60,7 +61,7 @@ public class EnhancedMetadataService {
    * @param dataset NetcdfDataset to enhance the NCML
    * @param writer  writer to send enhanced NCML to
    */
-  public static void enhance(final NetcdfDataset dataset, final InvDataset ids, final Writer writer) throws Exception {
+  public static void enhance(final NetcdfDataset dataset, final Dataset ids, final Writer writer) throws Exception {
     Extent ext = null;
 
     NCMLModifier ncmlMod = new NCMLModifier();
@@ -68,8 +69,9 @@ public class EnhancedMetadataService {
     ext = ThreddsExtentUtil.getExtent(dataset);
 
     NcMLWriter ncMLWriter = new NcMLWriter();
-    String ncml = ncMLWriter.writeXML(dataset);
-    InputStream ncmlIs = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
+    ByteArrayOutputStream dsToNcml = new ByteArrayOutputStream();
+    dataset.writeNcML(dsToNcml,null);
+    InputStream ncmlIs = new ByteArrayInputStream(dsToNcml.toByteArray());
     XMLUtil xmlUtil = new XMLUtil(ncmlIs);
 
     List<Element> list = xmlUtil.elemFinder("//ncml:netcdf", "ncml", "http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2");

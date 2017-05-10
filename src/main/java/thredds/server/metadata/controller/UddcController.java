@@ -42,17 +42,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import thredds.catalog.InvDataset;
+import thredds.client.catalog.Dataset;
+
+import thredds.core.AllowedServices;
+import thredds.core.StandardService;
 import thredds.server.metadata.exception.ThreddsUtilitiesException;
 import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
-import thredds.servlet.ThreddsConfig;
 import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
- * Controller for UDDC service 
+ * Controller for UDDC service
  * Author: dneufeld Date: Jul 7, 2010
  * <p/>
  */
@@ -62,17 +64,19 @@ public class UddcController extends AbstractMetadataController implements Initia
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 		    .getLogger(UddcController.class);
 
+	static final AllowedServices as = new AllowedServices();
+	static final boolean _allow = as.isAllowed(StandardService.uddc);
+
+
 	protected String getPath() {
 		return _metadataServiceType + "/";
 	}
-	
 	//public void init() throws ServletException {
 	public void afterPropertiesSet() throws ServletException {
 		_metadataServiceType = "UDDC";
 		_servletPath ="/uddc";
 		_logServerStartup.info("Metadata UDDC - initialization start");
-		_allow = ThreddsConfig.getBoolean("NCISO.uddcAllow", false);
-	    _logServerStartup.info("NCISO.uddcAllow = " + _allow);		
+	    _logServerStartup.info("NCISO.uddcAllow = " + _allow);
 		String ncIsoXslFilePath = super.sc.getRealPath("/WEB-INF/classes/resources/xsl/nciso") + "/UnidataDDCount-HTML.xsl";		  
 		xslFile = new File(ncIsoXslFilePath); 		    
 	}
@@ -98,7 +102,6 @@ public class UddcController extends AbstractMetadataController implements Initia
 		try {
 			//Controllers gets initialized before the ThreddsConfig reads the config file so _allow is always false
 			//Workaround for now...
-			_allow = ThreddsConfig.getBoolean("NCISO.isoAllow", false);
 			isAllowed(_allow, _metadataServiceType, res);
 			res.setContentType(ContentType.html.getContentHeader());
 
@@ -109,8 +112,8 @@ public class UddcController extends AbstractMetadataController implements Initia
 			} else {
 				Writer writer = new StringWriter();
 				// Get Thredds level metadata if it exists
-				InvDataset ids = this.getThreddsDataset(req);
-
+				//InvDataset ids = this.getThreddsDataset(req);
+				Dataset ids = this.getThreddsDataset(req, res);
 				EnhancedMetadataService.enhance(netCdfDataset, ids, writer);
 				String ncml = writer.toString();
 				writer.flush();

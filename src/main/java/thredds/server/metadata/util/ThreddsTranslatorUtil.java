@@ -41,15 +41,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * ThreddsTranslatorUtil
@@ -99,7 +91,8 @@ public class ThreddsTranslatorUtil {
                 ncml = new File(_tempFileName);
             }
             FileWriter writer = new FileWriter(ncml);
-            NCdumpW.writeNcML(ncd,writer,false,null);
+
+            NCdumpW.writeNcML(ncd,writer,NCdumpW.WantValues.all,null);
         } catch (Exception e) {
 			String err = "Could not load NETCDF file: "+location+" because of Exception. "+e.getLocalizedMessage();
 			_log.error(err,e);			
@@ -153,8 +146,7 @@ public class ThreddsTranslatorUtil {
         FileWriter fw = null;
         try {
             fw = new FileWriter(returnFile);
-            String ncml = ncMLWriter.writeXML(ncFile);
-            fw.write(ncml);
+            ncFile.writeNcML(fw, null);
         } catch (IOException e) {
 			String err = "Could not load NETCDF file: "+ncFile.getLocation()+" because of IOException. "+
                     e.getLocalizedMessage();
@@ -214,8 +206,9 @@ public class ThreddsTranslatorUtil {
 		String ncml;
 		InputStream is;
 		try {
-			ncml = ncMLWriter.writeXML(netcdfFile);
-			is = new ByteArrayInputStream(ncml.getBytes("UTF-8"));
+            ByteArrayOutputStream dsToNcml = new ByteArrayOutputStream();
+            netcdfFile.writeNcML(dsToNcml,null);
+            is = new ByteArrayInputStream(dsToNcml.toByteArray());
 		} catch (UnsupportedEncodingException uee) {
 			String err = "UnsupportedEncodingException " + uee.getLocalizedMessage();
 			_log.error(err, uee);

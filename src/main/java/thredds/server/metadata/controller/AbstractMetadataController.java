@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.context.ServletContextAware;
 
-import thredds.catalog.InvCatalog;
-import thredds.catalog.InvDataset;
-import thredds.servlet.DataRootHandler;
-
+import thredds.client.catalog.Dataset;
+import thredds.client.catalog.Catalog;
+import thredds.core.TdsRequestedDataset;
+import thredds.server.catalog.DataRoot;
 
 public abstract class AbstractMetadataController implements ServletContextAware, IMetadataContoller {
   private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(AbstractMetadataController.class);
@@ -64,72 +64,13 @@ public abstract class AbstractMetadataController implements ServletContextAware,
    *
    * @param req incoming url request
    */
-  protected InvDataset getThreddsDataset(final HttpServletRequest req) {
-
-    InvCatalog catalog = null;
-    InvDataset ids = null;
-    String catalogPath = null;
-
-    String catalogString = req.getParameter("catalog");
-    String invDatasetString = req.getParameter("dataset");
-
+  protected Dataset getThreddsDataset(final HttpServletRequest req, final HttpServletResponse res) {
     try {
-
-      // Check for matching dataset and catalog.
-      DataRootHandler drh = DataRootHandler.getInstance();
-
-      //Is the catalog generated dynamically by datasetScan?
-      String dynamicCatStr = "thredds/catalog/"; //datasetScans catalog hrefs always begin with thredds/catalog
-      String staticCatStr = "thredds/";
-
-      if (catalogString.contains(".html")) catalogString = catalogString.substring(0, catalogString.length() - 4) + "xml";
-
-      // Check to see if it's a static or dynamically generated catalog
-      if (catalogString.contains(dynamicCatStr)) {
-        catalogPath = catalogString.substring(catalogString.indexOf(dynamicCatStr) + dynamicCatStr.length(), catalogString.length());
-      } else {
-        catalogPath = catalogString.substring(catalogString.indexOf(staticCatStr) + staticCatStr.length(), catalogString.length());
-      }
-
-      _log.debug("ncISO catalogPath=" + catalogPath + "; " + "dataset=" + invDatasetString + "; invDatasetString=" + invDatasetString);
-
-      catalog = drh.getCatalog(catalogPath, new URI(catalogString));
-      if (catalog == null) {
-        _log.error("catalog is not found using catalogPath: " + catalogPath + "; and catalogString: " + catalogString);
-        return null;
-      } else {
-        _log.debug("catalog found! catalog name: " + catalog.getName());
-        ids = (InvDataset) catalog.findDatasetByID(invDatasetString);
-      }
-
-
-      if (ids != null) {
-        _log.debug("Dataset information retrieved!"
-                + ids.getCatalogUrl() + "; id=" + ids.getName());
-      } else {
-        _log.debug("ids dataset not found!: " + invDatasetString);
-        return null;
-      }
-
-      if (ids.hasNestedDatasets()) {
-        String nestedDataset = invDatasetString.substring((invDatasetString.lastIndexOf("/") + 1), invDatasetString.length());
-        //then look up the individual nested dataset using
-        InvDataset nds = ids.findDatasetByName(nestedDataset);
-        _log.debug("nestedDataset name: " + nestedDataset);
-        return nds != null ? nds : ids;
-      }
-
-      return ids;
-    } catch (URISyntaxException e) {
-      String msg = "Bad URI syntax [" + catalogString + "]: " + e.getMessage();
-      _log.error(msg + " getTDSMetadata failed: ", e);
-      return null;
-    } catch (Exception e) {
-      String msg = e.getMessage();
-      _log.error(msg + " getTDSMetadata failed: ", e);
+      return (Dataset) TdsRequestedDataset.getGridDataset(req, res, null);
+    } catch (IOException e) {
+      _log.error("IOException while trying to get GridDataset:\n" + e.getLocalizedMessage());
       return null;
     }
-
   }
 
   protected abstract String getPath();
