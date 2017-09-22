@@ -6,37 +6,31 @@
   <artifactId>threddsIso</artifactId>
   <packaging>jar</packaging>
   <version>2.2.10-SNAPSHOT</version>
+  
   <repositories>
-
-    <repository>
-      <id>ibiblio-mirror</id>
-      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-    </repository>
-
     <repository>
       <id>unidata-releases</id>
       <name>UNIDATA Releases</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-releases/</url>
     </repository>
 
     <repository>
       <id>unidata-snapshots</id>
       <name>UNIDATA Snapshots</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-snapshots/</url>
     </repository>
-
   </repositories>
 
   <distributionManagement>
     <repository>
       <id>unidata-releases</id>
       <name>UNIDATA Releases</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-releases/</url>
     </repository>
     <snapshotRepository>
       <id>unidata-snapshots</id>
       <name>UNIDATA Snapshots</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
