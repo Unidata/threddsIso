@@ -23,6 +23,7 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 | TDS Version        | threddsISO     | threddsISO Tag       |
 |:-------------------|:---------------|:---------------------|
+| TDS 4.6.12         | 2.2.11         | **v2.2.11**          |
 | TDS 4.6.11         | 2.2.10         | **v2.2.10**          |
 | TDS 4.6.9          | 2.2.9          | **v2.2.9**           |
 | TDS 4.6.4          | 2.2.8          | **v2.2.8**           |
@@ -36,7 +37,7 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 | threddsIso branch | TDS Version            |
 |:------------------|:-----------------------|
-| master            | **4.6.11**             |
+| master            | **4.6.12**             |
 
 
 ## External Dependencies
