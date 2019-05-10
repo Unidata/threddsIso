@@ -92,7 +92,7 @@ public class ThreddsTranslatorUtil {
             }
             FileWriter writer = new FileWriter(ncml);
 
-            NCdumpW.writeNcML(ncd,writer,NCdumpW.WantValues.all,null);
+            NCdumpW.writeNcML(ncd,writer,NCdumpW.WantValues.none,null);
         } catch (Exception e) {
 			String err = "Could not load NETCDF file: "+location+" because of Exception. "+e.getLocalizedMessage();
 			_log.error(err,e);			
