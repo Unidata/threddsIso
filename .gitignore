@@ -45,3 +45,8 @@ Thumbs.db
 # Coverity files 
 cov-int
 threddsIso.tgz
+
+# Some of the command line output
+.json
+ncISO.log
+thredds.json
