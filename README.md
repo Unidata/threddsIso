@@ -1,8 +1,3 @@
-<a href="https://scan.coverity.com/projects/4054">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/4054/badge.svg"/>
-</a>
-
 # Unidata threddsISO Code Repository
 
 This is the main threddsISO code repository.
@@ -23,6 +18,7 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 | TDS Version        | threddsISO     | threddsISO Tag       |
 |:-------------------|:---------------|:---------------------|
+| TDS 4.6.14         | 2.2.12         | **v2.2.12**          |
 | TDS 4.6.12         | 2.2.11         | **v2.2.11**          |
 | TDS 4.6.11         | 2.2.10         | **v2.2.10**          |
 | TDS 4.6.9          | 2.2.9          | **v2.2.9**           |
