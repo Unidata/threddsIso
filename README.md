@@ -18,6 +18,7 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 | TDS Version        | threddsISO     | threddsISO Tag       |
 |:-------------------|:---------------|:---------------------|
+| TDS 4.6.15         | 2.2.13         | **v2.2.13**          |
 | TDS 4.6.14         | 2.2.12         | **v2.2.12**          |
 | TDS 4.6.12         | 2.2.11         | **v2.2.11**          |
 | TDS 4.6.11         | 2.2.10         | **v2.2.10**          |
