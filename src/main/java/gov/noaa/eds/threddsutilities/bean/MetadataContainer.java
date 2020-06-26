@@ -1,22 +1,18 @@
 package gov.noaa.eds.threddsutilities.bean;
 
-import gov.noaa.eds.service.WafService;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
-
-import thredds.catalog.InvAccess;
-import thredds.catalog.InvDataset;
-import thredds.catalog.ServiceType;
+import thredds.client.catalog.Access;
+import thredds.client.catalog.Dataset;
+import thredds.client.catalog.ServiceType;
 
 public class MetadataContainer {
 
 	private Map<String, String> _map = new HashMap<String, String>();
 
-	private InvDataset _dataset;
+	private Dataset _dataset;
 	private static  Vector<ServiceType> additionalServiceTypes = new Vector<ServiceType>(0);
 	
     static{
@@ -27,7 +23,7 @@ public class MetadataContainer {
         additionalServiceTypes.add(ServiceType.NetcdfSubset);
     }
     
-	public MetadataContainer(InvDataset threddsDataset) {
+	public MetadataContainer(Dataset threddsDataset) {
 		_dataset = threddsDataset;		
 		this.processMetadata();
 	}
@@ -44,22 +40,22 @@ public class MetadataContainer {
 	public void processMetadata() {
 
 	    // Get available online resources including 		
-		for(InvAccess access: _dataset.getAccess()){
-			if(additionalServiceTypes.contains(access.getService().getServiceType())){
+		for(Access access: _dataset.getAccess()){
+			if(additionalServiceTypes.contains(access.getService().getType())){
 				int pos = access.getStandardUrlName().indexOf("/", 7);
 				String serviceBaseUrl = access.getStandardUrlName().substring(0,pos) + access.getService().getBase() + access.getUrlPath();
 //				if (access.getService().getServiceType().equals(ServiceType.OPENDAP)) _map.put(access.getService().getServiceType().toString().toLowerCase(), access.getStandardUrlName().replace("http", "dods"));
 				// Don't use dods:// it's outdated. Keep http or https
-				if (access.getService().getServiceType().equals(ServiceType.OPENDAP)) _map.put(access.getService().getServiceType().toString().toLowerCase(), access.getStandardUrlName());
-				if (access.getService().getServiceType().equals(ServiceType.WMS)) _map.put(access.getService().getServiceType().toString().toLowerCase(), serviceBaseUrl + "?service=WMS&version=1.3.0&request=GetCapabilities");
-				if (access.getService().getServiceType().equals(ServiceType.WCS)) _map.put(access.getService().getServiceType().toString().toLowerCase(), serviceBaseUrl + "?service=WCS&version=1.0.0&request=GetCapabilities");
-				if (access.getService().getServiceType().equals(ServiceType.NetcdfSubset)) _map.put(access.getService().getServiceType().toString().toLowerCase(), serviceBaseUrl);
+				if (access.getService().getType().equals(ServiceType.OPENDAP)) _map.put(access.getService().getType().toString().toLowerCase(), access.getStandardUrlName());
+				if (access.getService().getType().equals(ServiceType.WMS)) _map.put(access.getService().getType().toString().toLowerCase(), serviceBaseUrl + "?service=WMS&version=1.3.0&request=GetCapabilities");
+				if (access.getService().getType().equals(ServiceType.WCS)) _map.put(access.getService().getType().toString().toLowerCase(), serviceBaseUrl + "?service=WCS&version=1.0.0&request=GetCapabilities");
+				if (access.getService().getType().equals(ServiceType.NetcdfSubset)) _map.put(access.getService().getType().toString().toLowerCase(), serviceBaseUrl);
 			}
 		}
 		
 	}
 	
-	public InvDataset getDataset() {
+	public Dataset getDataset() {
 		return _dataset;
 	}
 	

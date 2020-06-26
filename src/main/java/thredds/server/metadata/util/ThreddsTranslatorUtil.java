@@ -32,10 +32,10 @@ import thredds.server.metadata.exception.ThreddsUtilitiesException;
 
 import org.apache.commons.lang.StringUtils;
 
-import ucar.nc2.NCdumpW;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ncml.NcMLWriter;
+import ucar.nc2.dataset.NetcdfDatasets;
+import ucar.nc2.write.NcmlWriter;
 
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
@@ -83,27 +83,24 @@ public class ThreddsTranslatorUtil {
     private static File doGetNcml(final String location, final String saveFileLocation) {
         File ncml = null;
 
-        try {
-            NetcdfDataset ncd = NetcdfDataset.openDataset(location);
+        try (NetcdfDataset ncd = NetcdfDatasets.openDataset(location)) {
             if(!StringUtils.isEmpty(saveFileLocation)){
                 ncml = new File(saveFileLocation);
             } else {
                 ncml = new File(_tempFileName);
             }
-            FileWriter writer = new FileWriter(ncml);
-
-            NCdumpW.writeNcML(ncd,writer,NCdumpW.WantValues.none,null);
+            try(FileWriter writer = new FileWriter(ncml)) {
+              ncd.writeNcML(writer, null);
+            }
         } catch (Exception e) {
-			String err = "Could not load NETCDF file: "+location+" because of Exception. "+e.getLocalizedMessage();
-			_log.error(err,e);			
+          String err = "Could not load NETCDF file: "+location+" because of Exception. "+e.getLocalizedMessage();
+          _log.error(err,e);
         } finally {
             if(StringUtils.isEmpty(saveFileLocation)){
                 if(ncml != null && ncml.exists()){
                     ncml.deleteOnExit();
                 }
             }
-
-
         }
         return ncml;
     }
@@ -136,7 +133,7 @@ public class ThreddsTranslatorUtil {
 
     private static File doGetNcml(final NetcdfFile ncFile, final String fileLocation)
             throws ThreddsUtilitiesException {
-        NcMLWriter ncMLWriter = new NcMLWriter();
+        NcmlWriter ncMLWriter = new NcmlWriter();
         File returnFile;
         if(!StringUtils.isEmpty(fileLocation)){
             returnFile = new File(fileLocation);
@@ -201,7 +198,7 @@ public class ThreddsTranslatorUtil {
     
     public static void transform(final String xsltFileStr, final NetcdfFile netcdfFile, Writer writer) throws ThreddsUtilitiesException {         
         StreamSource xsltSS = getXSLT(xsltFileStr);
-        NcMLWriter ncMLWriter = new NcMLWriter();
+        NcmlWriter ncMLWriter = new NcmlWriter();
 
 		String ncml;
 		InputStream is;

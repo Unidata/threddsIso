@@ -47,6 +47,7 @@ import thredds.server.metadata.service.EnhancedMetadataService;
 import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.NetcdfDatasets;
 
 /**
  * Controller for NCML service 
@@ -74,7 +75,7 @@ public class NcmlController extends AbstractMetadataController implements Initia
 	}
 
 	public void destroy() {
-		NetcdfDataset.shutdown();
+		NetcdfDatasets.shutdown();
 		_logServerStartup.info("Metadata NCML - destroy done");
 	}
 

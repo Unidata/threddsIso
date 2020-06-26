@@ -53,6 +53,7 @@ import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.core.AllowedServices;
 import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.NetcdfDatasets;
 
 /**
  * Controller for ISO service 
@@ -82,7 +83,7 @@ public class IsoController extends AbstractMetadataController implements Initial
 	}
 
 	public void destroy() {
-		NetcdfDataset.shutdown();
+		NetcdfDatasets.shutdown();
 		_logServerStartup.info("Metadata ISO - destroy done");
 	}
 

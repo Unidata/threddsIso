@@ -35,8 +35,7 @@ import thredds.server.metadata.util.NCMLModifier;
 import thredds.server.metadata.util.ThreddsExtentUtil;
 import thredds.server.metadata.util.XMLUtil;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ncml.NcMLWriter;
-
+import ucar.nc2.write.NcmlWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -68,7 +67,7 @@ public class EnhancedMetadataService {
 
     ext = ThreddsExtentUtil.getExtent(dataset);
 
-    NcMLWriter ncMLWriter = new NcMLWriter();
+    NcmlWriter ncMLWriter = new NcmlWriter();
     ByteArrayOutputStream dsToNcml = new ByteArrayOutputStream();
     dataset.writeNcML(dsToNcml,null);
     InputStream ncmlIs = new ByteArrayInputStream(dsToNcml.toByteArray());
