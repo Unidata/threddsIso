@@ -8,17 +8,17 @@ import thredds.server.metadata.util.ThreddsExtentUtil;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.server.metadata.util.XMLUtil;
 import gov.noaa.eds.util.FileUtility;
+import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
-import org.jdom2.Element;
-
 public class WafService {
 
-	private static Logger logger = Logger.getLogger(WafService.class);
+	private static Logger logger = LoggerFactory.getLogger(WafService.class);
 
 	// rawgit is a CDN for github hosted files. The URL includes a commit tag since the CDN cache is immutable, so the master CDN version never changes even if the file does.
 	private static final String _xsltMetadataAssessmentUrl = "https://cdn.rawgit.com/NOAA-PMEL/uafnciso/fdb7f86515c21a8b5c087978975addf9ad5d0027/transforms/UnidataDDCount-HTML.xsl";
@@ -67,7 +67,7 @@ public class WafService {
 				}
             }
         } catch (Exception e) {
-        	logger.error(e);
+        	logger.error("Exception encountered.", e);
         }
         return ncmlFiles;
     }
@@ -82,7 +82,7 @@ public class WafService {
             	ThreddsTranslatorUtil.transform(_xsltMetadataAssessmentUrl, ncmlFilePathStr, wafDirStr + reportFileNm);
             }
         } catch (Exception e) {
-        	logger.error(e);
+        	logger.error("Exception encountered.", e);
         }
     }
 
@@ -96,7 +96,7 @@ public class WafService {
             	ThreddsTranslatorUtil.transform(_xsltIsoUrl, ncmlFilePathStr, wafDirStr + reportFileNm);
             }
         } catch (Exception e) {
-        	logger.error(e);
+        	logger.error("Exception encountered.", e);
         }
     }
     

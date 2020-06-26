@@ -8,11 +8,11 @@ import thredds.client.catalog.ServiceType;
 import thredds.client.catalog.builder.CatalogBuilder;
 import thredds.server.metadata.exception.ThreddsUtilitiesException;
 import gov.noaa.eds.threddsutilities.service.iface.ICatalogCrawler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
 
 /**
  * CatalogCrawlerImpl
@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  * @author dneufeld
  */
 public class CatalogCrawlerImpl implements ICatalogCrawler {
-	private static Logger logger = Logger.getLogger(CatalogCrawlerImpl.class); 
+	private static Logger logger = LoggerFactory.getLogger(CatalogCrawlerImpl.class);
     private static  Vector<ServiceType> allowableTypes = new Vector<ServiceType>(0);
     private Dataset lastParent = null;
     
