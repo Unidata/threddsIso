@@ -42,8 +42,8 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.List;
 
-import org.jdom.Attribute;
-import org.jdom.Element;
+import org.jdom2.Attribute;
+import org.jdom2.Element;
 
 /**
  * EnhancedMetadataService

@@ -30,7 +30,7 @@ package thredds.server.metadata.util;
 
 import java.util.Comparator;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
 * ElementNameComparator

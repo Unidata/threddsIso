@@ -36,8 +36,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import java.util.List;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 import thredds.client.catalog.Access;
 import thredds.client.catalog.Dataset;

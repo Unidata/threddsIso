@@ -39,14 +39,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
+import org.jdom2.Attribute;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
 
 /**
  * XMLUtil
@@ -55,7 +59,7 @@ import org.jdom.xpath.XPath;
  * @author dneufeld
  */
 public class XMLUtil {
-  static private org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(XMLUtil.class);
+  private static final org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(XMLUtil.class);
 
 	private Document _doc = null;
 		
@@ -78,7 +82,7 @@ public class XMLUtil {
 	/** 
 	* Class constructor.
 	* 
-	* @param inputstream an input stream of XML parse
+	* @param is an input stream of XML parse
 	*/	
 	public XMLUtil(InputStream is) {
 		SAXBuilder saxBuilder = new SAXBuilder();
@@ -103,8 +107,8 @@ public class XMLUtil {
 	/** 
 	* List elements in the XML document.
 	* 
-	* @param list list of XML elements
-	* @param text indentation string to use in printing out elements
+	* @param es list of XML elements
+	* @param indent indentation string to use in printing out elements
 	*/		
 	public void listElements(final List<Element> es, final String indent) {
 		for (Element e : es) {		    
@@ -115,8 +119,8 @@ public class XMLUtil {
 	/** 
 	* List elements by recursively traversing the XML document.
 	*  
-	* @param element an XML element
-	* @param text indentation string to use in printing out elements
+	* @param e an XML element
+	* @param indent indentation string to use in printing out elements
 	*/	
 	public void listElement(final Element e, final String indent) {
 	    _log.debug(indent + "*Element, name:" + 
@@ -135,8 +139,8 @@ public class XMLUtil {
 	/** 
 	* List attributes from an element.
 	*  
-	* @param attributes an XML element's attributes
-	* @param text indentation string to use in printing out elements
+	* @param as an XML element's attributes
+	* @param indent indentation string to use in printing out elements
 	*/	
 	public static void listAttributes(final List<Attribute> as, final String indent) {
 		for (Attribute a : as) {
@@ -149,79 +153,70 @@ public class XMLUtil {
 	/** 
 	* Find an XML element based on an XPath expression.
 	*  
-	* @param expression the XPath expression to locate an element
+	* @param xPathExpr the XPath expression to locate an element
 	* @param prefix the prefix used to denote the namespace 
-	* @param namespace the namespace associated with the element being searched for 
+	* @param nameSpace the namespace associated with the element being searched for
 	* @return list list of found XML elements
 	*/
 	public List<Element> elemFinder(final String xPathExpr, final String prefix, final String nameSpace) {
-	    XPath x = null;
-
-		try {
-			x = XPath.newInstance(xPathExpr);
-			x.addNamespace(prefix, nameSpace);
-			List<Element> list = x.selectNodes(_doc);
-			return list;
-		} catch (JDOMException e) {
-			_log.error("JDOMException in XMLUtil: ", e);
-			return null;
-		}
-
-    }
+		Namespace ns = Namespace.getNamespace(prefix, nameSpace);
+		XPathExpression<Element> xpath =
+				XPathFactory.instance().compile(xPathExpr, Filters.element(), null, ns);
+		return xpath.evaluate(_doc);
+  }
 	
 	/** 
 	* Sort an XML document based on a comparator
 	*  
-	* @param element the root XML element used for sorting 
-	* @param comparator the comparator used for sorting
+	* @param parent the root XML element used for sorting
+	* @param c the comparator used for sorting
 	*/
-	public void sortElements(Element parent, final Comparator c) {
+	public void sortElements(Element parent, final Comparator<Element> c) {
 	    // Create a new, static list of child elements, and sort it.
-	    List<Element> children = new ArrayList(parent.getChildren());
-	    Collections.sort(children, c);
-	    ListIterator childrenIter = children.listIterator();
+	    List<Element> children = parent.getChildren();
+	    sort(children, c);
+	    ListIterator<Element> childrenIter = children.listIterator();
 
 	    // Create a new, static list of all content items.
-	    List content = new ArrayList(parent.getContent());
-	    ListIterator contentIter = content.listIterator();
+
+	    List<Content> content = new ArrayList(parent.getContent());
+	    ListIterator<Content> contentIter = content.listIterator();
 
 	    // Loop through the content items, and whenever we find an Element,
 	    // we'll insert the next ordered Element in its place. Because the
 	    // content list is not live, it won't complain about an Element
 	    // being added twice.
-	    while(contentIter.hasNext()) {
-	        Object obj = contentIter.next();
-	        if (obj instanceof Element)
-	            contentIter.set(childrenIter.next());
-	    }
-
-	    // Finally, we set the content list back into the parent Element.
-	    List<Element> emptyList = new ArrayList<Element>();
-	    parent.setContent(emptyList);
-        parent.setContent(content);
-
-
+      while(contentIter.hasNext()) {
+          Object obj = contentIter.next();
+          if (obj instanceof Element) {
+              Element origChildElement = childrenIter.next();
+              Element cloneChildElement = origChildElement.clone();
+              cloneChildElement.detach();
+              contentIter.set(cloneChildElement);
+          }
+      }
+      // Finally, we set the content list back into the parent Element.
+      List<Element> emptyList = new ArrayList<>();
+      parent.setContent(emptyList);
+      parent.setContent(content);
 	}
 	
 	private void sort(List<Element> list, Comparator<Element> c) {
-		Element[] a = (Element[]) list.toArray(new Element[list.size()]);
+		Element[] a = list.toArray(new Element[0]);
 		Arrays.sort(a, c);
 
-		for (int i = 0; i < a.length; i++) {
-		    a[i].detach(); //removes Element also from "list"
+		for (Element element : a) {
+			element.detach(); //removes Element also from "list"
 		}
 
-		for (int i = 0; i < a.length; i++) {
-		    list.add(a[i]); //read Element to "list" in the right order
-		}
+		Collections.addAll(list, a);
 
 	}
 
 	/** 
 	* Write out the XML document.
 	* 
-	* @param filename the name of the file to use for the XML output 
-	*/	
+N	*/
 	public void write(final String fileName) {
 	    try {
 	        FileWriter writer = new FileWriter(fileName);
@@ -243,8 +238,7 @@ public class XMLUtil {
 	private void doWrite(final Writer writer) {
 	    try {
 	        XMLOutputter outputter = new XMLOutputter();
-	        Format newFormat = outputter.getFormat();
-	        newFormat = Format.getCompactFormat();
+	        Format newFormat = Format.getCompactFormat();
 	        newFormat.setIndent("  ");
 	        outputter.setFormat(newFormat);
 	        outputter.output(_doc, writer);	

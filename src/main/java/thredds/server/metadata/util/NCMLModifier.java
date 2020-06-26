@@ -37,8 +37,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.escape.Escaper;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 import ucar.nc2.constants.FeatureType;
 import thredds.client.catalog.Access;
