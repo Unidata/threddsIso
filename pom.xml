@@ -37,7 +37,7 @@
     <dependency>
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
-      <version>1.1.6</version>
+      <version>${jaxen.version}</version>
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.5</version>
+      <version>${commons-io.version}</version>
     </dependency>
 
     <dependency>
@@ -298,10 +298,11 @@
 
     <org.jdom.jdom2.version>2.0.6</org.jdom.jdom2.version>
     <net.sf.saxon.saxon-he.version>9.6.0-3</net.sf.saxon.saxon-he.version>
-
+    <jaxen.version>1.1.6</jaxen.version>
     <org.slf4j.version>1.7.28</org.slf4j.version>
 
     <org.apache.commons-lang.version>2.6</org.apache.commons-lang.version>
+    <commons-io.version>2.5</commons-io.version>
 
     <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
 
