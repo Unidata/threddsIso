@@ -3,10 +3,11 @@ package gov.noaa.eds.threddsutilities.bean;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ThreddsDatasetTree {
-	private static Logger _logger = Logger.getLogger(ThreddsDatasetTree.class);  
+	private static Logger _logger = LoggerFactory.getLogger(ThreddsDatasetTree.class);
 	
 	public Integer _id;
 	public String _displayName;	  

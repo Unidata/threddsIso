@@ -44,6 +44,7 @@ import ucar.nc2.constants.CF;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.NetcdfDatasets;
 import ucar.nc2.ft.FeatureDatasetFactoryManager;
 import ucar.nc2.units.DateFormatter;
 import ucar.nc2.units.DateUnit;
@@ -59,8 +60,7 @@ public class ThreddsExtentUtil {
 	private static Extent doGetExtent(final String url) throws Exception {
 		Extent ext = null;
 
-		try {
-			NetcdfDataset ncd = NetcdfDataset.openDataset(url);
+		try (NetcdfDataset ncd = NetcdfDatasets.openDataset(url)) {
 			ext = getExtent(ncd);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class ThreddsExtentUtil {
         if (values == null || values.length == 0) {
             return false;
         }
-        Attribute attr = var.findAttributeIgnoreCase(attribute);
+        Attribute attr = var.attributes().findAttributeIgnoreCase(attribute);
         if (attr == null) {
             return false;
         }

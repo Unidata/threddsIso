@@ -7,13 +7,13 @@ import java.io.FilenameFilter;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.Writer;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileUtility {
-	private static Logger logger = Logger.getLogger(FileUtility.class);  	
+	private static Logger logger = LoggerFactory.getLogger(FileUtility.class);
 
 	private Writer writer = null;
 	private File file = null;
@@ -55,13 +55,10 @@ public class FileUtility {
 	 
 	public boolean openFileWriter() {
       try {
-      	  writer = new BufferedWriter(new FileWriter(file));	
+      	  writer = new BufferedWriter(new FileWriter(file));
        	  return true;
-      } catch (FileNotFoundException fnfe) {
-       	  logger.error(fnfe);
-    	  return false;        	
       } catch (IOException ioe) {
-          logger.error(ioe);
+          logger.error("Exception opening file writer:", ioe);
           close();
           return false;        	
       }	
@@ -72,7 +69,7 @@ public class FileUtility {
     	  writer.write(text + "\n");        
     	  return true;
       } catch (IOException ioe) {
-    	  logger.error(ioe);
+    	  logger.error("Error writing to file.", ioe);
           close();
     	  return false;        	
       }	     
@@ -85,7 +82,7 @@ public class FileUtility {
         return true;
       } catch (IOException e)
       {
-        logger.error(e);
+        logger.error("Error writing to file.", e);
         close();
       	return false;        	
       }	     
@@ -101,7 +98,7 @@ public class FileUtility {
         }
       } catch (IOException e)
       {
-    	  logger.error(e);
+    	  logger.error("Error closing file.", e);
       }
     	
     }

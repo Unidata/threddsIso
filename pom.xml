@@ -7,30 +7,22 @@
   <packaging>jar</packaging>
   <version>2.4.0-SNAPSHOT</version>
   <repositories>
-
     <repository>
       <id>unidata-all</id>
-      <name>UNIDATA Releases</name>
+      <name>Unidata Artifacts</name>
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-all/</url>
     </repository>
-
-    <repository>
-      <id>unidata-snapshots</id>
-      <name>UNIDATA Snapshots</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
-    </repository>
-
   </repositories>
 
   <distributionManagement>
     <repository>
       <id>unidata-releases</id>
-      <name>UNIDATA Releases</name>
+      <name>Unidata Releases</name>
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
     </repository>
     <snapshotRepository>
       <id>unidata-snapshots</id>
-      <name>UNIDATA Snapshots</name>
+      <name>Unidata Snapshots</name>
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
@@ -38,14 +30,14 @@
   <dependencies>
     <dependency>
       <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-      <version>${org.jdom.jdom.version}</version>
+      <artifactId>jdom2</artifactId>
+      <version>${org.jdom.jdom2.version}</version>
     </dependency>
 
     <dependency>
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
-      <version>1.1.6</version>
+      <version>${jaxen.version}</version>
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
@@ -54,12 +46,6 @@
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
       <version>${net.sf.saxon.saxon-he.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
     </dependency>
 
     <dependency>
@@ -84,7 +70,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
+      <version>${commons-io.version}</version>
     </dependency>
 
     <dependency>
@@ -118,37 +104,30 @@
       <version>${com.google.guava.version}</version>
     </dependency>
 
-
+    <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>cdm-core</artifactId>
+      <version>${edu.ucar.cdm.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Introduces a cycle... -->
     <dependency>
       <groupId>edu.ucar</groupId>
-      <artifactId>cdm</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.ucar</groupId>
       <artifactId>tdcommon</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
+      <version>${edu.ucar.tds.version}</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>legacy</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>tds</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
+      <version>${edu.ucar.tds.version}</version>
       <classifier>classes</classifier>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
 
@@ -204,8 +183,6 @@
           <!-- Skip the default running of this plug-in (or everything is run
             twice...see below) -->
           <skip>${skipTests}</skip>
-          <!-- Skipping tests at all -->
-          <skipTests>true</skipTests>
           <!-- Show 100% of the lines from the stack trace (doesn't work) -->
           <trimStackTrace>false</trimStackTrace>
         </configuration>
@@ -315,19 +292,19 @@
     <sourceEncoding>UTF-8</sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <edu.ucar.cdm.version>5.0.0-SNAPSHOT</edu.ucar.cdm.version>
-    <com.google.guava.version>19.0</com.google.guava.version>
+    <edu.ucar.cdm.version>5.4.0-SNAPSHOT</edu.ucar.cdm.version>
+    <edu.ucar.tds.version>5.0.0-SNAPSHOT</edu.ucar.tds.version>
+    <com.google.guava.version>28.0-jre</com.google.guava.version>
 
-    <org.jdom.jdom.version>1.1.3</org.jdom.jdom.version>
-
-    <!--org.jdom.jdom2.version>2.0.4</org.jdom.jdom2.version-->
+    <org.jdom.jdom2.version>2.0.6</org.jdom.jdom2.version>
     <net.sf.saxon.saxon-he.version>9.6.0-3</net.sf.saxon.saxon-he.version>
-
-    <org.slf4j.version>1.7.7</org.slf4j.version>
+    <jaxen.version>1.1.6</jaxen.version>
+    <org.slf4j.version>1.7.28</org.slf4j.version>
 
     <org.apache.commons-lang.version>2.6</org.apache.commons-lang.version>
+    <commons-io.version>2.5</commons-io.version>
 
-    <org.springframework.version>4.3.20.RELEASE</org.springframework.version>
+    <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
 
     <javax.servlet.version>3.1.0</javax.servlet.version>
 

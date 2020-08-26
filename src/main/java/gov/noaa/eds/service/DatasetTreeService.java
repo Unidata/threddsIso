@@ -12,16 +12,15 @@ import thredds.server.metadata.util.ElementNameComparator;
 import thredds.server.metadata.util.ThreddsExtentUtil;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.server.metadata.util.XMLUtil;
+import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
-import org.jdom.Element;
-
 
 /**
  * DatasetTreeTest
@@ -33,7 +32,7 @@ import org.jdom.Element;
 
 	
 public class DatasetTreeService {
-	private static Logger logger = Logger.getLogger(DatasetTreeService.class);  
+	private static Logger logger = LoggerFactory.getLogger(DatasetTreeService.class);
 	// See WafService
     private static final String _xsltMetadataAssessmentUrl = "https://cdn.rawgit.com/NOAA-PMEL/uafnciso/fdb7f86515c21a8b5c087978975addf9ad5d0027/transforms/UnidataDDCount-HTML.xsl";
     private static final String _xsltIsoUrl = "https://cdn.rawgit.com/noaaroland/uafnciso/e84d6e26b87a799eb996173358c72ec7a4ed4912/transforms/UnidataDD2MI.xsl";
@@ -316,7 +315,7 @@ public class DatasetTreeService {
                 try {
                   getNodes(tree);
                 } catch (Exception e) {
-                	logger.error(e);
+                	logger.error("Exception encountered.", e);
                 }
             } 
             fu.writeln("");
@@ -324,7 +323,7 @@ public class DatasetTreeService {
             // write json footer
             fu.writeln("]}");
         } catch (Exception e) {
-        	logger.error(e);
+        	logger.error("Exception encountered.", e);
 
         } finally {
             fu.close();

@@ -38,6 +38,7 @@ import thredds.core.TdsRequestedDataset;
 import thredds.servlet.ServletUtil;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.NetcdfDatasets;
 
 /**
 * DatasetHandlerAdapter
@@ -66,7 +67,7 @@ public class DatasetHandlerAdapter {
 			datasetPath = ServletUtil.getParameterIgnoreCase(req, "dataset");
 			_log.debug("opendap datasetPath: " + datasetPath);
 			try {
-				dataset = NetcdfDataset.openDataset(datasetPath);
+				dataset = NetcdfDatasets.openDataset(datasetPath);
 			} catch (IOException e) {
 				res.setStatus( HttpServletResponse.SC_NOT_FOUND );
 				_log.debug("Failed to open dataset <" + datasetPath + ">: "
@@ -78,8 +79,8 @@ public class DatasetHandlerAdapter {
 				netcdfFile = TdsRequestedDataset.getNetcdfFile(req, res, datasetPath);
 
 				_log.debug("datasetPath: " + datasetPath + " netcdfFile location: " + netcdfFile.getLocation());
-		
-				dataset = new NetcdfDataset(netcdfFile);
+
+				dataset = NetcdfDatasets.enhance(netcdfFile, NetcdfDataset.getDefaultEnhanceMode(), null);
 
 			} catch (FileNotFoundException fnfe) {
 				res.setStatus( HttpServletResponse.SC_NOT_FOUND );

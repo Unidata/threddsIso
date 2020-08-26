@@ -53,6 +53,7 @@ import thredds.server.metadata.util.DatasetHandlerAdapter;
 import thredds.server.metadata.util.ThreddsTranslatorUtil;
 import thredds.util.ContentType;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.NetcdfDatasets;
 
 /**
  * Controller for UDDC service
@@ -83,7 +84,7 @@ public class UddcController extends AbstractMetadataController implements Initia
 	}
 
 	public void destroy() {
-		NetcdfDataset.shutdown();
+		NetcdfDatasets.shutdown();
 		_logServerStartup.info("Metadata UDDC - destroy done");
 	}
 
