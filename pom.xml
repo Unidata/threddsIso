@@ -1,19 +1,52 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
   <groupId>EDS</groupId>
-  <artifactId>threddsIso</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>threddsIso-parent</artifactId>
+  <packaging>pom</packaging>
   <version>2.4.0-SNAPSHOT</version>
+  <modules>
+    <module>nciso-common</module>
+    <module>nciso</module>
+    <module>tds-plugin</module>
+  </modules>
   <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
     <repository>
       <id>unidata-all</id>
       <name>Unidata Artifacts</name>
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-all/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+    </repository>
+    <repository>
+      <id>Snapshot Repository</id>
+      <name>Snapshot Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
     </repository>
   </repositories>
-
   <distributionManagement>
     <repository>
       <id>unidata-releases</id>
@@ -26,111 +59,27 @@
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom2</artifactId>
-      <version>${org.jdom.jdom2.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jaxen</groupId>
-      <artifactId>jaxen</artifactId>
-      <version>${jaxen.version}</version>
-      <type>jar</type>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
-      <version>${net.sf.saxon.saxon-he.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${org.slf4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${org.apache.commons-lang.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>${commons-io.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${javax.servlet.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${com.google.guava.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>cdm-core</artifactId>
-      <version>${edu.ucar.cdm.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- Introduces a cycle... -->
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>tdcommon</artifactId>
-      <version>${edu.ucar.tds.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>tds</artifactId>
-      <version>${edu.ucar.tds.version}</version>
-      <classifier>classes</classifier>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-
-  </dependencies>
-
-
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>edu.ucar</groupId>
+        <artifactId>tds-plugin-bom</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>nciso-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <profiles>
     <profile>
       <id>dev</id>
@@ -140,10 +89,10 @@
       <build>
         <resources>
           <resource>
-            <directory>src/main/resources/dev</directory>
+            <directory>../nciso-common/src/main/resources/dev</directory>
           </resource>
           <resource>
-            <directory>src/main/resources/xsl/nciso</directory>
+            <directory>../nciso-common/src/main/resources/xsl/nciso</directory>
             <targetPath>resources/xsl/nciso</targetPath>
           </resource>
         </resources>
@@ -154,78 +103,26 @@
       <build>
         <resources>
           <resource>
-            <directory>src/main/resources/prod</directory>
+            <directory>../nciso-common/src/main/resources/prod</directory>
           </resource>
           <resource>
-            <directory>src/main/resources/xsl/nciso</directory>
+            <directory>../nciso-common/src/main/resources/xsl/nciso</directory>
             <targetPath>resources/xsl/nciso</targetPath>
           </resource>
         </resources>
       </build>
     </profile>
   </profiles>
-
   <build>
     <plugins>
-      <!-- The most recent xslts are much smaller meaning that Xalan 2.7.1 is
-        not currently needed However, allowing for flexibility that they may grow
-        in size again we leave them in the pom for now. <plugin> <artifactId>maven-assembly-plugin</artifactId>
-        <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef>
-        </descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id>
-        <phase>package</phase> <goals> <goal>single</goal> </goals> </execution>
-        </executions> </plugin> -->
       <plugin>
-        <!-- Separates the unit tests from the integration tests. -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <!-- Skip the default running of this plug-in (or everything is run
-            twice...see below) -->
           <skip>${skipTests}</skip>
-          <!-- Show 100% of the lines from the stack trace (doesn't work) -->
-          <trimStackTrace>false</trimStackTrace>
         </configuration>
-        <executions>
-          <execution>
-            <id>unit-tests</id>
-            <phase>test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <!-- Never skip running the tests when the test phase is invoked -->
-              <skip>false</skip>
-              <includes>
-                <!-- Include unit tests within integration-test phase. -->
-                <include>**/*Tests.java</include>
-              </includes>
-              <excludes>
-                <!-- Exclude integration tests within (unit) test phase. -->
-                <exclude>**/*IntegrationTests.java</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>integration-tests</id>
-            <phase>integration-test</phase>
-
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <!-- Never skip running the tests when the integration-test phase
-                is invoked -->
-              <skip>false</skip>
-              <includes>
-                <!-- Include integration tests within integration-test phase. -->
-                <include>**/*IntegrationTests.java</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -235,13 +132,6 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>${maven-antrun-plugin.version}</version>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -255,35 +145,13 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>gov.noaa.eds.controller.ServiceController</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.versoin}</version>
       </plugin>
-
     </plugins>
-
   </build>
-
   <properties>
     <!-- default is to skip tests. use mvn test -DskipTests=false to override on command line -->
     <skipTests>true</skipTests>
@@ -292,35 +160,12 @@
     <sourceEncoding>UTF-8</sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <edu.ucar.cdm.version>5.4.0-SNAPSHOT</edu.ucar.cdm.version>
-    <edu.ucar.tds.version>5.0.0-SNAPSHOT</edu.ucar.tds.version>
-    <com.google.guava.version>28.0-jre</com.google.guava.version>
-
-    <org.jdom.jdom2.version>2.0.6</org.jdom.jdom2.version>
-    <net.sf.saxon.saxon-he.version>9.6.0-3</net.sf.saxon.saxon-he.version>
-    <jaxen.version>1.1.6</jaxen.version>
-    <org.slf4j.version>1.7.28</org.slf4j.version>
-
-    <org.apache.commons-lang.version>2.6</org.apache.commons-lang.version>
-    <commons-io.version>2.5</commons-io.version>
-
-    <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
-
-    <javax.servlet.version>3.1.0</javax.servlet.version>
-
-    <junit.version>4.12</junit.version>
-
     <!-- Plugins versions -->
-    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-    <maven-assembly-plugin.version>2.17</maven-assembly-plugin.version>
-    <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-    <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
-    <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
-    <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-    <maven-release-plugin.version>2.4.1</maven-release-plugin.version>
-    <maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
-    <maven-war-plugin.version>2.4</maven-war-plugin.version>
-
-
+    <maven-shade-plugin.versoin>3.2.4</maven-shade-plugin.versoin>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+    <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
   </properties>
 </project>

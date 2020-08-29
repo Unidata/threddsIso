@@ -1,0 +1,110 @@
+on: [pull_request]
+
+jobs:
+  tests-zulu:
+    name: threddsIso Tests (Zulu JDK)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # test against latest 8 and 11
+        java: [ 8, 11 ]
+        profile: [ dev, prod ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup java ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+          architecture: x64
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build and test with Maven
+        run: mvn clean test -DskipTests=false -P ${{ matrix.profile }}
+
+  tests-adpotopenjdk-hs-8-no-build-cache:
+    name: netCDF-Java Tests (AdoptOpenJDK-HS 8, no build cache)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # test against latest 8 and 11
+        java: [ 8, 11 ]
+        profile: [ dev, prod ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch latest AdoptOpenJDK 8 (hotspot) built for linux"
+        run: curl -L "https://api.adoptopenjdk.net/v2/binary/releases/openjdk8?openjdk_impl=hotspot&arch=x64&release=latest&type=jdk&os=linux" -o aojdk8-hs.tar.gz
+      - name: Setup Latest AdoptOpenJDK (hotspot) 8
+        uses: actions/setup-java@master
+        with:
+          java-version: 8
+          architecture: x64
+          jdkFile: ./aojdk8-hs.tar.gz
+      - name: Print java version
+        run: java -version
+      - name: Build and test with Maven
+        run: mvn clean test -DskipTests=false -P ${{ matrix.profile }}
+
+  tests-adpotopenjdk-hs-8:
+    name: netCDF-Java Tests (AdoptOpenJDK-HS 8)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # test against latest 8 and 11
+        java: [ 8, 11 ]
+        profile: [ dev, prod ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch latest AdoptOpenJDK 8 (hotspot) built for linux"
+        run: curl -L "https://api.adoptopenjdk.net/v2/binary/releases/openjdk8?openjdk_impl=hotspot&arch=x64&release=latest&type=jdk&os=linux" -o aojdk8-hs.tar.gz
+      - name: Setup Latest AdoptOpenJDK (hotspot) 8
+        uses: actions/setup-java@master
+        with:
+          java-version: 8
+          architecture: x64
+          jdkFile: ./aojdk8-hs.tar.gz
+      - name: Print java version
+        run: java -version
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build and test with Maven
+        run: mvn clean test -DskipTests=false -P ${{ matrix.profile }}
+
+  tests-adpotopenjdk-hs-11:
+    name: netCDF-Java Tests (AdoptOpenJDK-HS 11)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # test against latest 8 and 11
+        java: [ 8, 11 ]
+        profile: [ dev, prod ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch latest AdoptOpenJDK 11 (hotspot) built for linux"
+        run: curl -L "https://api.adoptopenjdk.net/v2/binary/releases/openjdk11?openjdk_impl=hotspot&arch=x64&release=latest&type=jdk&os=linux" -o aojdk11-hs.tar.gz
+      - name: Setup Latest AdoptOpenJDK (hotspot) 11
+        uses: actions/setup-java@master
+        with:
+          java-version: 11
+          architecture: x64
+          jdkFile: ./aojdk11-hs.tar.gz
+      - name: Print java version
+        run: java -version
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build and test with Maven
+        run: mvn clean test -DskipTests=false -P ${{ matrix.profile }}
