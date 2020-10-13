@@ -1,9 +1,6 @@
 # Ignore all target directories
 target/
 
-# Ignore possible THREDDS content directories
-tds/content/
-
 # Ignore unwanted IntelliJ IDEA project files
 /intelliJ/
 /intellij/
@@ -25,10 +22,6 @@ _compareTemp
 .settings/
 bin/
 *~
-
-# Ignore gradle stuff
-.gradle/
-build/
 
 # OS generated files 
 .DS_Store*
