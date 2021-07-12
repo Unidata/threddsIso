@@ -69,6 +69,13 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>edu.ucar</groupId>
+        <artifactId>netcdf-java-testing-platform</artifactId>
+        <version>5.4.2-SNAPSHOT</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>3.4</version>
@@ -115,6 +122,11 @@
   </profiles>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
