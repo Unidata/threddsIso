@@ -70,6 +70,7 @@ public class XMLUtil {
     */	
 	public XMLUtil(final String fileName) {
 		SAXBuilder saxBuilder = new SAXBuilder();
+		saxBuilder.setExpandEntities(false);
         try {				    
 		    _doc = saxBuilder.build(fileName);
         } catch (JDOMException jde) {
@@ -86,6 +87,7 @@ public class XMLUtil {
 	*/	
 	public XMLUtil(InputStream is) {
 		SAXBuilder saxBuilder = new SAXBuilder();
+		saxBuilder.setExpandEntities(false);
         try {				   
 		    _doc = saxBuilder.build(is);
         } catch (JDOMException jde) {
