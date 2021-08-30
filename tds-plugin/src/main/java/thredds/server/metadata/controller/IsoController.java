@@ -41,6 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -62,7 +64,7 @@ import ucar.nc2.dataset.NetcdfDatasets;
  */
 @Controller
 @RequestMapping("/iso/")
-public class IsoController extends AbstractMetadataController implements InitializingBean {
+public class IsoController extends AbstractMetadataController {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(IsoController.class);
 
 	@Autowired
@@ -72,15 +74,18 @@ public class IsoController extends AbstractMetadataController implements Initial
 		return _metadataServiceType + "/";
 	}
 	
-	//public void init() throws ServletException {
-	public void afterPropertiesSet() throws ServletException {	
-		_metadataServiceType = "ISO";
-		_servletPath = "/iso";
-		_logServerStartup.info("Metadata ISO - initialization start");
-		_logServerStartup.info("NCISO.isoAllow = "+ _allow);
-		String ncIsoXslFilePath = super.sc.getRealPath("/WEB-INF/classes/resources/xsl/nciso") + "/UnidataDD2MI.xsl";		  
-		xslFile = new File(ncIsoXslFilePath); 	
-	}
+  @EventListener
+  public void init(ContextRefreshedEvent event) throws ServletException {
+    if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {
+			_allow = as.isAllowed(StandardService.iso);
+			_metadataServiceType = "ISO";
+			_servletPath = "/iso";
+			_logServerStartup.info("Metadata ISO - initialization start");
+			_logServerStartup.info("NCISO.isoAllow = " + _allow);
+			String ncIsoXslFilePath = super.sc.getRealPath("/WEB-INF/classes/resources/xsl/nciso") + "/UnidataDD2MI.xsl";
+			xslFile = new File(ncIsoXslFilePath);
+    }
+  }
 
 	public void destroy() {
 		NetcdfDatasets.shutdown();
