@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -56,7 +58,7 @@ import ucar.nc2.dataset.NetcdfDatasets;
  */
 @Controller
 @RequestMapping("/ncml/")
-public class NcmlController extends AbstractMetadataController implements InitializingBean {
+public class NcmlController extends AbstractMetadataController {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(NcmlController.class);
 
 	@Autowired
@@ -66,12 +68,15 @@ public class NcmlController extends AbstractMetadataController implements Initia
 		return _metadataServiceType + "/";
 	}
 
-	//public void init() throws ServletException {
-	public void afterPropertiesSet() throws ServletException {
-		_metadataServiceType = "NCML";
-		_servletPath = "/ncml";
-		_logServerStartup.info("Metadata NCML - initialization start");
-	    _logServerStartup.info("NCISO.ncmlAllow = "+ _allow);
+	@EventListener
+	public void init(ContextRefreshedEvent event) throws ServletException {
+		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {
+			_allow = as.isAllowed(StandardService.iso_ncml);
+			_metadataServiceType = "NCML";
+			_servletPath = "/ncml";
+			_logServerStartup.info("Metadata NCML - initialization start");
+			_logServerStartup.info("NCISO.ncmlAllow = " + _allow);
+		}
 	}
 
 	public void destroy() {
