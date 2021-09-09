@@ -36,7 +36,7 @@ ncISO/threddsISO community) to maintained and advance the project.
 
 | threddsIso branch | TDS Version            |
 |:------------------|:-----------------------|
-| v2.2.x            | **4.6.18-SNAPSHOT**    |
+| 2.2.x             | **4.6.18-SNAPSHOT**    |
 | main              | **5.0.0-SNAPSHOT**    |
 
 ## External Dependencies
