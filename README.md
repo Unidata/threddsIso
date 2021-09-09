@@ -29,6 +29,9 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 | netCDF-Java / TDS Version       | threddsISO     | threddsISO Tag |
 |:--------------------------------|:---------------|:---------------|
 | 5.4.0-SNAPSHOT / 5.0.0-SNAPSHOT | 2.4.0-SNAPSHOT |                |
+| 4.6.17                          | 2.2.15         | **v2.2.15**    |
+| 4.6.16                          | 2.2.14         | **v2.2.14**    |
+| 4.6.15                          | 2.2.13         | **v2.2.13**    |
 | 4.6.15                          | 2.2.13         | **v2.2.13**    |
 | 4.6.14                          | 2.2.12         | **v2.2.12**    |
 | 4.6.12                          | 2.2.11         | **v2.2.11**    |
@@ -45,8 +48,8 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 | threddsIso branch | netCDF-Java / TDS Version           |
 |:------------------|:------------------------------------|
-| master            | **4.6.15**                          |
-| threddsIsoTds5    | **5.4.0-SNAPSHOT / 5.0.0-SNAPSHOT** |
+| main              | **5.4.0-SNAPSHOT / 5.0.0-SNAPSHOT** |
+| 2.2.x             | **4.6.17**                          |
 
 ## Notes on External Dependencies
 
