@@ -1,7 +1,7 @@
 Making a threddsIso release in preparation for a THREDDS release
 
 1. threddsIso and the TDS have a circular dependency. To resolve it, we're going to have to build temporary THREDDS artifacts.
-     a) In the TDS, change the version from "5.0.0-SNAPSHOT" to "5.0.0".
+     a) In the TDS, change the version from "5.0-SNAPSHOT" to "5.0".
      b) Do not update the ncwms or threddsIso dependencies, as we haven't yet built the new versions.
         We're kind of cheating here.
      c) "gradlew publishToMavenLocal".
@@ -9,7 +9,7 @@ Making a threddsIso release in preparation for a THREDDS release
         We'll use these to deploy new versions of ncwms and threddsIso.
 2. In threddsIso, pull all changes from main.
 3. Update the versions of any SNAPSHOT dependencies.
-   For example, "2.4.0-SNAPSHOT" -> "2.4.0". Commit the change.
+   For example, "2.4.0" -> "2.4.0". Commit the change.
    git add pom.xml
    git commit -m "Release 2.4.0"
 4. Create a tag for the release, e.g. "v2.4.0".

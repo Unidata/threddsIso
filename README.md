@@ -8,7 +8,7 @@ This code is maintained and advanced by developers at NOAA/NGDC and at Unidata a
 
 A command-line utility, [ncISO], is also available ([here][ncISO]) for automating metadata analysis and ISO metadata generation for THREDDS Catalogs.
 
-Much has changed with the `2.4.0-SNAPSHOT` branch.
+Much has changed with the `2.4.0` branch.
 The repository currently produces two artifacts of interest:
 
 1. [nciso](https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-all/EDS/nciso/)
@@ -28,7 +28,7 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 | netCDF-Java / TDS Version       | threddsISO     | threddsISO Tag |
 |:--------------------------------|:---------------|:---------------|
-| 5.4.0-SNAPSHOT / 5.0.0-SNAPSHOT | 2.4.0-SNAPSHOT |                |
+| 5.4.0-SNAPSHOT / 5.0.0-SNAPSHOT | 2.4.0 |                |
 | 4.6.17                          | 2.2.15         | **v2.2.15**    |
 | 4.6.16                          | 2.2.14         | **v2.2.14**    |
 | 4.6.15                          | 2.2.13         | **v2.2.13**    |
