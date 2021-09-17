@@ -1,22 +1,21 @@
 Making a threddsIso release in preparation for a THREDDS release
 
-1. threddsIso and THREDDS have a circular dependency. To resolve it,
-   we're going to have to build temporary THREDDS artifacts.
-     a) In THREDDS, manually change the version, e.g. from "4.6.1-SNAPSHOT" to "4.6.1".
+1. threddsIso and the TDS have a circular dependency. To resolve it, we're going to have to build temporary THREDDS artifacts.
+     a) In the TDS, change the version from "5.0.0-SNAPSHOT" to "5.0.0".
      b) Do not update the ncwms or threddsIso dependencies, as we haven't yet built the new versions.
         We're kind of cheating here.
-     c) "gradlew publishToMavenLocal". This will install new THREDDS artifacts in your local Maven repository.
+     c) "gradlew publishToMavenLocal".
+        This will install new THREDDS artifacts in your local Maven repository.
         We'll use these to deploy new versions of ncwms and threddsIso.
-     d) Revert all of the changes you've made. For the actual THREDDS release,
-        we'll (eventually) be running the gradle-release-plugin on Jenkins.
-2. In threddsIso, pull all changes from origin.
+2. In threddsIso, pull all changes from main.
 3. Update the versions of any SNAPSHOT dependencies.
-   For example, "2.2.6-SNAPSHOT" -> "2.2.6". Commit the change.
-4. Create a tag for the release, e.g. "v2.2.6". In IntelliJ, do VCS->Git->Tag...
+   For example, "2.4.0-SNAPSHOT" -> "2.4.0". Commit the change.
+   git add pom.xml
+   git commit -m "Release 2.4.0"
+4. Create a tag for the release, e.g. "v2.4.0".
+   git tag v2.4.0 <commmit-hash-for release>
 5. "mvn deploy". You'll need the proper credentials in ~/.m2/settings.xml in order to deploy to Nexus.
-6. Update versions again for development, e.g. "2.2.6" -> "2.2.7-SNAPSHOT". Commit the change.
+6. Update versions again for development, e.g. "2.4.0" -> "2.4.1". Commit the change.
+   git add pom.xml
+   git commit -m "Begin work on 2.4.1-SNAPSHOT"
 7. Push the changes upstream. Be sure to include the tag you created.
-   In IntelliJ, check the "Push Tags" box in the "Push Commits" dialog.
-
-Steps 2-6 are very similar to the procedure that the maven-release-plugin is intended to perform.
-However, I cannot get it to work on Windows: http://stackoverflow.com/questions/26644373
