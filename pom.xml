@@ -9,7 +9,7 @@
        in "unidata-releases". The SNAPSHOT version was used in concert with tds-5.0.0-SNAPSHOT, but I have no idea
        when the other 2 were created or for what purpose. Thus, when we're done with the 2.2.X line, I propose that
        we skip over 2.3.X and go straight to 2.4.X or 3.X. That way we can avoid potential conflicts. -->
-  <version>2.2.17-SNAPSHOT</version>
+  <version>2.2.17</version>
   
   <repositories>
     <repository>
@@ -254,7 +254,7 @@
     <sourceEncoding>UTF-8</sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <edu.ucar.cdm.version>4.6.19-SNAPSHOT</edu.ucar.cdm.version>
+    <edu.ucar.cdm.version>4.6.19</edu.ucar.cdm.version>
 
     <org.jdom.jdom.version>1.1.3</org.jdom.jdom.version>
     <!--org.jdom.jdom2.version>2.0.4</org.jdom.jdom2.version-->
