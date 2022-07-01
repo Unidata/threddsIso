@@ -4,7 +4,7 @@
   <groupId>EDS</groupId>
   <artifactId>threddsIso-parent</artifactId>
   <packaging>pom</packaging>
-  <version>2.4.4</version>
+  <version>2.4.5</version>
   <modules>
     <module>nciso-common</module>
     <module>nciso</module>
@@ -64,14 +64,14 @@
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>tds-plugin-bom</artifactId>
-        <version>5.4-SNAPSHOT</version>
+        <version>5.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf-java-testing-platform</artifactId>
-        <version>5.5.0</version>
+        <version>5.5.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
