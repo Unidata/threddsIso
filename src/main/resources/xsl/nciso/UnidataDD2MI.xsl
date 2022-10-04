@@ -3,6 +3,7 @@
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
         Recent Modifications
+            <xd:p>2017-10-26. Update writeDate output for non-dash/non-space strings: 4,8 are gco:Date, 16 is gco:DateTime. Brian McKenna Brian.McKenna@rpsgroup.com</xd:p>
             <xd:p>2017-01-26. Disable output escaping on location keywords to avoid double-escaping the "&gt;" separators to "&amp;gt;". John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2017-01-11. gmd:credit can pull from global attributes "acknowledgment" (UDDC) or "acknowledgement" (ACDD). John Maurer jmaurer@hawaii.edu</xd:p>
             <xd:p>2016-02-26. Strip white space from before/after keywords. John Maurer jmaurer@hawaii.edu</xd:p>
@@ -1209,23 +1210,27 @@
                         </gmd:CI_Date>
                     </gmd:date>
                 </xsl:when>
-                <xsl:otherwise>                    
+                <xsl:otherwise>
                     <gmd:date>
                         <gmd:CI_Date>
-                            <gmd:date>                                                                
-                                <gco:Date>       
-                                    <xsl:choose>
-                                        <xsl:when test="string-length($dateToWrite)='4' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                            <gmd:date>
+                                <xsl:choose>
+                                    <xsl:when test="string-length($dateToWrite)='4' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                        <gco:Date>
                                             <xsl:value-of select="concat($dateToWrite,'-01-01')"/>
-                                        </xsl:when>
-                                        <xsl:when test="string-length($dateToWrite)='8' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                        </gco:Date>
+                                    </xsl:when>
+                                    <xsl:when test="string-length($dateToWrite)='8' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                        <gco:Date>
                                             <xsl:value-of select="substring($dateToWrite,1, 4)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,5,2)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,7,2)"/>
-                                        </xsl:when>                                        
-                                         <xsl:when test="string-length($dateToWrite)='16' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                        </gco:Date>
+                                    </xsl:when>
+                                    <xsl:when test="string-length($dateToWrite)='16' and not(contains($dateToWrite, '-')) and not(contains($dateToWrite, ' '))">
+                                        <gco:DateTime>
                                             <xsl:value-of select="substring($dateToWrite,1, 4)"/>
                                             <xsl:text>-</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,5,2)"/>
@@ -1237,12 +1242,14 @@
                                             <xsl:value-of select="substring($dateToWrite,12,2)"/>
                                             <xsl:text>:</xsl:text>
                                             <xsl:value-of select="substring($dateToWrite,14)"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
+                                        </gco:DateTime>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <gco:Date>
                                             <xsl:value-of select="$dateToWrite"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </gco:Date>
+                                        </gco:Date>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </gmd:date>
                             <gmd:dateType>
                                 <xsl:call-template name="writeCodelist">
