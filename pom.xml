@@ -5,6 +5,9 @@
   <artifactId>threddsIso-parent</artifactId>
   <packaging>pom</packaging>
   <version>2.4.6-SNAPSHOT</version>
+  <scm>
+    <developerConnection>scm:git:https://github.com/Unidata/threddsIso.git</developerConnection>
+  </scm>
   <modules>
     <module>nciso-common</module>
     <module>nciso</module>
@@ -134,6 +137,15 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>${maven-release-plugin.version}</version>
+        <configuration>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>${maven-jar-plugin.version}</version>
       </plugin>
@@ -207,6 +219,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Plugins versions -->
+    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
