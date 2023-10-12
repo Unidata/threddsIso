@@ -1,9 +1,8 @@
-package thredds.server.metadata.util;
+package thredds.server.metadata.nciso.util;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
-import thredds.server.metadata.nciso.util.NCMLModifier;
 
 
 public class NCMLModiferTest {
@@ -16,5 +15,4 @@ public class NCMLModiferTest {
 
         assertThat("-.0").isEqualTo(fmtDbl);
     }
-
 }

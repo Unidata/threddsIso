@@ -1,4 +1,4 @@
-package thredds.server.metadata.nciso;
+package thredds.server.metadata.nciso.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import thredds.server.metadata.nciso.bean.Extent;
-import thredds.server.metadata.nciso.util.ThreddsExtentUtil;
 
 public class ThreddsExtentUtilTest {
     private Extent getExtent(String file) throws Exception {
