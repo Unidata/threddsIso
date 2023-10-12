@@ -422,7 +422,8 @@ public class NCMLModifier {
 		addElem(groupElem, "nciso_version", getVersion());
 	}
 
-	private String getVersion() {
+	// package private for testing
+	String getVersion() {
 		try {
 			final Properties properties = new Properties();
 			properties.load(getClass().getClassLoader().getResourceAsStream("project.properties"));

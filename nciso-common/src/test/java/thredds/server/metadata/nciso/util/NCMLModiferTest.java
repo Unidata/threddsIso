@@ -15,4 +15,11 @@ public class NCMLModiferTest {
 
         assertThat("-.0").isEqualTo(fmtDbl);
     }
+
+    @Test
+    public void testVersion() {
+        final NCMLModifier ncmlModifier = new NCMLModifier();
+        final String version = ncmlModifier.getVersion();
+        assertThat(version.matches("\\d+\\.\\d+\\.\\d+-SNAPSHOT|\\d+\\.\\d+\\.\\d+")).isTrue();
+    }
 }
