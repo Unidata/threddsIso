@@ -1,9 +1,8 @@
-package thredds.server.metadata.util;
+package thredds.server.metadata.nciso.util;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
-import thredds.server.metadata.nciso.util.NCMLModifier;
 
 
 public class NCMLModiferTest {
@@ -17,4 +16,10 @@ public class NCMLModiferTest {
         assertThat("-.0").isEqualTo(fmtDbl);
     }
 
+    @Test
+    public void testVersion() {
+        final NCMLModifier ncmlModifier = new NCMLModifier();
+        final String version = ncmlModifier.getVersion();
+        assertThat(version.matches("\\d+\\.\\d+\\.\\d+-SNAPSHOT|\\d+\\.\\d+\\.\\d+")).isTrue();
+    }
 }
