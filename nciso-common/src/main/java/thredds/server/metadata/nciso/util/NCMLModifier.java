@@ -30,6 +30,7 @@ package thredds.server.metadata.nciso.util;
 
 import com.google.common.html.HtmlEscapers;
 import com.google.common.xml.XmlEscapers;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.escape.Escaper;
+import java.util.Properties;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
@@ -63,7 +65,7 @@ import ucar.nc2.units.TimeDuration;
 public class NCMLModifier {
   static private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NCMLModifier.class);
 	private String _openDapService = null;
-	private String _version = "2.2.3";
+	private String _version = "2.4";
 	private static DecimalFormat dFmt = new DecimalFormat(".#####");
   private Escaper xmlEscaper = XmlEscapers.xmlAttributeEscaper();
 	private Escaper htmlEscaper = HtmlEscapers.htmlEscaper();
@@ -417,7 +419,18 @@ public class NCMLModifier {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String metadata_creation_date = sdf.format(dateStamp);
 		addElem(groupElem, "metadata_creation", metadata_creation_date);
-		addElem(groupElem, "nciso_version", _version);
+		addElem(groupElem, "nciso_version", getVersion());
+	}
+
+	private String getVersion() {
+		try {
+			final Properties properties = new Properties();
+			properties.load(getClass().getClassLoader().getResourceAsStream("project.properties"));
+			final String version = properties.getProperty("version");
+			return version == null ? _version : version;
+		} catch (IOException e) {
+			return _version;
+		}
 	}
 
 	private Element newGroupElement() {

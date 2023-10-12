@@ -168,6 +168,15 @@
         <version>${maven-shade-plugin.versoin}</version>
       </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>../nciso-common/src/main/resources/</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>project.properties</include>
+        </includes>
+      </resource>
+    </resources>
   </build>
   <properties>
     <!-- default is to skip tests. use mvn test -DskipTests=false to override on command line -->
