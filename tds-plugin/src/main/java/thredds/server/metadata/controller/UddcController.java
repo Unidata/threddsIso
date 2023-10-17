@@ -45,6 +45,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.xml.sax.InputSource;
 import thredds.client.catalog.Dataset;
 
 import thredds.core.AllowedServices;
@@ -67,6 +68,7 @@ import ucar.nc2.dataset.NetcdfDatasets;
 public class UddcController extends AbstractMetadataController {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory
 		    .getLogger(UddcController.class);
+	private static final String xslFile = "nciso/UnidataDDCount-HTML.xsl";
 
 
 	@Autowired
@@ -84,8 +86,6 @@ public class UddcController extends AbstractMetadataController {
 			_servletPath ="/uddc";
 			_logServerStartup.info("Metadata UDDC - initialization start");
 			_logServerStartup.info("NCISO.uddcAllow = " + _allow);
-			String ncIsoXslFilePath = super.sc.getRealPath("/WEB-INF/classes/resources/xsl/nciso") + "/UnidataDDCount-HTML.xsl";
-			xslFile = new File(ncIsoXslFilePath);
 		}
 	}
 
