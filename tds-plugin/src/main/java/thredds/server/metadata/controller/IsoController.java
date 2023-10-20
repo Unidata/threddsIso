@@ -66,6 +66,7 @@ import ucar.nc2.dataset.NetcdfDatasets;
 @RequestMapping("/iso/")
 public class IsoController extends AbstractMetadataController {
 	private static org.slf4j.Logger _log = org.slf4j.LoggerFactory.getLogger(IsoController.class);
+	private static final String xslFile = "nciso/UnidataDD2MI.xsl";
 
 	@Autowired
 	private AllowedServices as;
@@ -82,8 +83,6 @@ public class IsoController extends AbstractMetadataController {
 			_servletPath = "/iso";
 			_logServerStartup.info("Metadata ISO - initialization start");
 			_logServerStartup.info("NCISO.isoAllow = " + _allow);
-			String ncIsoXslFilePath = super.sc.getRealPath("/WEB-INF/classes/resources/xsl/nciso") + "/UnidataDD2MI.xsl";
-			xslFile = new File(ncIsoXslFilePath);
     }
   }
 

@@ -27,7 +27,6 @@ public abstract class AbstractMetadataController implements ServletContextAware,
   protected String _servletPath = "";
 
   protected ServletContext sc;
-  protected File xslFile;
 
   public void setServletContext(ServletContext sc) {
     this.sc = sc;
