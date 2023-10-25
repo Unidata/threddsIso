@@ -64,7 +64,7 @@
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>tds-plugin-bom</artifactId>
-        <version>5.5-SNAPSHOT</version>
+        <version>${tds.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -177,6 +177,16 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>${maven-shade-plugin.version}</version>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>wagon-maven-plugin</artifactId>
+        <version>${wagon-maven-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${maven-antrun-plugin.version}</version>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -204,5 +214,11 @@
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
     <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
+    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+
+    <!-- TDS version, and version for the download-tds artifacts repository (without SNAPSHOT) -->
+    <tds.version>5.5-SNAPSHOT</tds.version>
+    <downloads-tds.version>5.5</downloads-tds.version>
   </properties>
 </project>
