@@ -1,25 +1,8 @@
-Making a threddsIso release in preparation for a THREDDS release
+Making a threddsIso release:
 
-1. threddsIso and the TDS have a circular dependency. To resolve it, we're going to have to build temporary THREDDS artifacts.
-     a) In the TDS, change the version from "5.4-SNAPSHOT" to "5.4".
-     b) Do not update the ncwms or threddsIso dependencies, as we haven't yet built the new versions.
-        We're kind of cheating here.
-     c) "gradlew publishToMavenLocal".
-        This will install new THREDDS artifacts in your local Maven repository.
-        We'll use these to deploy new versions of ncwms and threddsIso.
-2. In threddsIso, pull all changes from main.
-3. Update the versions of any SNAPSHOT dependencies (dont' forget about the netCDF-Java and
-   TDS dependencies).
-   For example, "2.4.4-SNAPSHOT" -> "2.4.4". Commit the change.
-   git add --all
-   git commit -m "Release 2.4.4"
-4. Create a tag for the release, e.g. "v2.4.4".
-   git tag v2.4.3 <commmit-hash-for release>
-5. "mvn deploy". You'll need the proper credentials in ~/.m2/settings.xml in order to deploy to Nexus.
-6. Update versions again for development, e.g. "2.4.4" -> "2.4.5-SNAPSHOT" (dont' forget about the
-   netCDF-Java and TDS dependencies).
-   Also, update the project README.
-   Commit the change.
-   git add pom.xml
-   git commit -m "Begin work on 2.4.5-SNAPSHOT"
-7. Push the changes upstream. Be sure to include the tag you created.
+1. Ensure that proper credentials exist in your maven `settings.xml`.
+2. Update the versions of any SNAPSHOT dependencies
+3. Use the maven release plugin to update the version to the release version, make the git tag, and update to the next development version.
+ Note that `-DdryRun=true` argument can be added to test everything works without deploying. This involves two commands:
+- `mvn release:prepare`
+- `mvn release:perform`

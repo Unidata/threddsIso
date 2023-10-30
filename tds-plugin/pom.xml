@@ -133,7 +133,7 @@
             </goals>
             <configuration>
               <target name="generate_checksum">
-                <property name="file" value="${build.directory}/${project.build.finalName}-jar-with-dependencies.jar"/>
+                <property name="file" value="${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar"/>
                 <checksum algorithm="md5" file="${file}"/>
                 <checksum algorithm="sha1" file="${file}"/>
                 <checksum algorithm="sha-256" fileext=".sha256" file="${file}"/>
@@ -153,7 +153,7 @@
               <goal>upload</goal>
             </goals>
             <configuration>
-              <fromDir>${build.directory}</fromDir>
+              <fromDir>${project.build.directory}</fromDir>
               <includes>${project.build.finalName}-jar-with-dependencies.*</includes>
               <url>https://artifacts.unidata.ucar.edu/content/repositories/downloads-tds/${downloads-tds.version}/</url>
               <!-- Server ID to use for authentication -->
