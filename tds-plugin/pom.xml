@@ -92,10 +92,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <skip>${skipTests}</skip>
-          <excludes>
-            <!-- Exclude integration tests - these need to be relocated. -->
-            <exclude>**/*IntegrationTests.java</exclude>
-          </excludes>
         </configuration>
       </plugin>
       <plugin>
