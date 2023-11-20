@@ -98,6 +98,11 @@
         <artifactId>nciso-common</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers</artifactId>
+        <version>1.19.2</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <profiles>
