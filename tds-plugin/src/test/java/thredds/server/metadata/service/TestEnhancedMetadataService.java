@@ -17,7 +17,7 @@ public class TestEnhancedMetadataService {
 
   @Test
   public void shouldReturnMetadata() throws Exception {
-    final String path = getClass().getResource("testgrid1.nc").getPath();
+    final String path = getClass().getResource("/thredds/testgrid1.nc").getPath();
     final Writer writer = new StringWriter();
 
     try (NetcdfDataset netcdfDataset = NetcdfDatasets.openDataset(path)) {
@@ -29,7 +29,8 @@ public class TestEnhancedMetadataService {
         && (node.getAttributes().getNamedItem("name").getNodeValue().equals("metadata_creation")
         || node.getAttributes().getNamedItem("name").getNodeValue().equals("nciso_version")));
 
-    final Diff diff = DiffBuilder.compare(Input.fromStream(getClass().getResourceAsStream("testgrid1.ncml")))
+    final Diff diff =
+        DiffBuilder.compare(Input.fromStream(getClass().getResourceAsStream("/thredds/testgrid1.ncml.xml")))
         .withTest(writer.toString())
         .withNodeFilter(filter)
         .build();
