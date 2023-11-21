@@ -79,6 +79,11 @@
       <artifactId>xmlunit-core</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -87,10 +92,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <skip>${skipTests}</skip>
-          <excludes>
-            <!-- Exclude integration tests - these need to be relocated. -->
-            <exclude>**/*IntegrationTests.java</exclude>
-          </excludes>
         </configuration>
       </plugin>
       <plugin>
