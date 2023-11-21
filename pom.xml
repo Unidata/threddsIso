@@ -204,6 +204,19 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <version>${maven-antrun-plugin.version}</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -234,6 +247,7 @@
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+    <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
     <!-- TDS version, and version for the download-tds artifacts repository (without SNAPSHOT) -->
     <tds.version>5.5-SNAPSHOT</tds.version>
