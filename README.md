@@ -1,8 +1,9 @@
 # Unidata threddsISO Code Repository
 
 This is the main threddsISO code repository.
-threddsISO provides the NcML, ISO 19115, and metadata rubric services available from the THREDDS Data Server ([TDS]).
-The code in this repository is used to build the [threddsIso artifacts][Maven_artifacts] ([snapshots][Maven_artifacts_snapshots]) that are distributed with the [TDS].
+threddsISO provides the NcML, ISO 19115, and metadata rubric services that can be used with the THREDDS Data Server ([TDS]).
+The code in this repository is used to build the [threddsIso artifacts][Maven_artifacts] ([snapshots][Maven_artifacts_snapshots]).
+The threddsISO plugin is no longer distributed with the TDS by default, however, it is easy add it to your TDS (see documentation [here][ncISO_TDS_docs]).
 
 This code is maintained and advanced by developers at NOAA/NGDC and at Unidata along with many contributions from the community of users.
 
@@ -66,6 +67,7 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 [ncISO]: https://github.com/NOAA-PMEL/uafnciso
 [TDS]: http://www.unidata.ucar.edu/software/tds/current/
+[ncISO_TDS_docs]: https://docs.unidata.ucar.edu/tds/current/userguide/iso_metadata.html
 
 [Maven_artifacts]: https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-releases/EDS/
 [Maven_artifacts_snapshots]: https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-snapshots/EDS/
