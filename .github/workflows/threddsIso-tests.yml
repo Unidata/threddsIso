@@ -11,7 +11,7 @@ jobs:
         java: [ 11, 14 ]
         profile: [ dev, prod ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup java ${{ matrix.java }}i (${{ matrix.distribution }})
         uses: actions/setup-java@v2
         with:
