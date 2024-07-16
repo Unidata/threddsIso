@@ -250,7 +250,7 @@
     <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
     <!-- TDS version, and version for the download-tds artifacts repository (without SNAPSHOT) -->
-    <tds.version>5.5</tds.version>
+    <tds.version>5.6-SNAPSHOT</tds.version>
     <downloads-tds.version>5.5</downloads-tds.version>
   </properties>
 </project>
