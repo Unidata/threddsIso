@@ -4,7 +4,7 @@
   <groupId>EDS</groupId>
   <artifactId>threddsIso-parent</artifactId>
   <packaging>pom</packaging>
-  <version>2.4.6-SNAPSHOT</version>
+  <version>2.4.7-SNAPSHOT</version>
   <scm>
     <developerConnection>scm:git:https://github.com/Unidata/threddsIso.git</developerConnection>
   </scm>
@@ -74,7 +74,7 @@
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf-java-testing-platform</artifactId>
-        <version>5.5.4-SNAPSHOT</version>
+        <version>5.6.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -250,7 +250,7 @@
     <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
     <!-- TDS version, and version for the download-tds artifacts repository (without SNAPSHOT) -->
-    <tds.version>5.5-SNAPSHOT</tds.version>
-    <downloads-tds.version>5.5</downloads-tds.version>
+    <tds.version>5.6-SNAPSHOT</tds.version>
+    <downloads-tds.version>5.6</downloads-tds.version>
   </properties>
 </project>
