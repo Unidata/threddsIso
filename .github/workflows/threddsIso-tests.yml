@@ -6,9 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # test against latest 11 and 14
+        # test against latest 17 and 21
         distribution: [zulu, adopt]
-        java: [ 11, 14 ]
+        java: [ 17, 21 ]
         profile: [ dev, prod ]
     steps:
       - uses: actions/checkout@v4
