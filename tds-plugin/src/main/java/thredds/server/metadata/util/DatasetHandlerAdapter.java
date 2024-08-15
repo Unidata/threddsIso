@@ -31,8 +31,8 @@ package thredds.server.metadata.util;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import thredds.core.TdsRequestedDataset;
 import thredds.servlet.ServletUtil;
