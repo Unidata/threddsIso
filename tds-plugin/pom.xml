@@ -6,7 +6,7 @@
   <parent>
     <groupId>EDS</groupId>
     <artifactId>threddsIso-parent</artifactId>
-    <version>2.4.7-SNAPSHOT</version>
+    <version>2.4.7</version>
   </parent>
   <artifactId>tds-plugin</artifactId>
   <dependencies>
