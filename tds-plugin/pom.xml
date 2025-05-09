@@ -143,26 +143,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>wagon-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>upload-to-downloads-page</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>upload</goal>
-            </goals>
-            <configuration>
-              <fromDir>${project.build.directory}</fromDir>
-              <includes>${project.build.finalName}-jar-with-dependencies.*</includes>
-              <url>https://artifacts.unidata.ucar.edu/content/repositories/downloads-tds/${downloads-tds.version}/</url>
-              <!-- Server ID to use for authentication -->
-              <serverId>unidata-snapshots</serverId>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>
