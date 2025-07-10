@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2023-2025 University Corporation for Atmospheric Research/Unidata
+ * See LICENSE for license information.
+ */
+
 package thredds.server.metadata;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -13,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
@@ -27,6 +33,7 @@ import ucar.httpservices.HTTPFactory;
 import ucar.httpservices.HTTPMethod;
 import ucar.httpservices.HTTPSession;
 
+@Category(Integration.class)
 public class NcIsoIT {
   private static final DockerImageName dockerImageName =
       DockerImageName.parse("unidata/thredds-docker:" + getTdsVersion());
@@ -39,14 +46,21 @@ public class NcIsoIT {
           "/usr/local/tomcat/content/thredds/catalog.xml")
       .withCopyFileToContainer(MountableFile.forClasspathResource("/thredds/testgrid1.nc"),
           "/usr/local/tomcat/content/thredds/public/testdata/testgrid1.nc")
-      .withCopyFileToContainer(MountableFile.forHostPath(getJarPath()),
-          "/usr/local/tomcat/webapps/thredds/WEB-INF/lib/tds-plugin-jar-with-dependencies.jar");
+      // copy local tds-plugin jar
+      .withCopyFileToContainer(MountableFile.forHostPath(getJarPath("tds-plugin")),
+          "/usr/local/tomcat/webapps/thredds/WEB-INF/lib/1-tds-plugin.jar")
+      // make sure local nciso-common shows up before bundled nciso-common jar by
+      // prefixing it with 1-
+      .withCopyFileToContainer(MountableFile.forHostPath(getJarPath("../../nciso-common/target/nciso-common")),
+      "/usr/local/tomcat/webapps/thredds/WEB-INF/lib/1-nciso-common.jar");
 
   @BeforeClass
-  public static void setUp() {
+  public static void setUp() throws IOException, InterruptedException {
     final String address = tds.getHost();
     final Integer port = tds.getFirstMappedPort();
     basePath = "http://" + address + ":" + port + "/thredds/";
+    // remove bundled tds-plugin classes from the classpath
+    tds.execInContainer("rm", "-rf", "/usr/local/tomcat/webapps/thredds/WEB-INF/classes/thredds/server/metadata");
   }
 
   @Test
@@ -118,11 +132,11 @@ public class NcIsoIT {
     return getPropertyValue("tds_version");
   }
 
-  private static Path getJarPath() {
+  private static Path getJarPath(String name) {
     try {
       final Path targetPath = Paths.get(ClassLoader.getSystemClassLoader().getResource("").toURI()).getParent();
-      return Paths.get(targetPath.toString(), "tds-plugin-" + getVersion() + "-jar-with-dependencies.jar");
-    } catch (URISyntaxException e) {
+      return Paths.get(targetPath.toRealPath().toString(), name + "-" + getVersion() + ".jar");
+    } catch (URISyntaxException | IOException e) {
       throw new RuntimeException(e);
     }
   }
