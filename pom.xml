@@ -41,12 +41,12 @@
     <repository>
       <id>unidata-releases</id>
       <name>Unidata Releases</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-releases/</url>
     </repository>
     <snapshotRepository>
       <id>unidata-snapshots</id>
       <name>Unidata Snapshots</name>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-snapshots/</url>
+      <url>https://artifacts.unidata.ucar.edu/repository/unidata-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
   <dependencyManagement>
