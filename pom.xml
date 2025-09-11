@@ -61,7 +61,7 @@
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf-java-testing-platform</artifactId>
-        <version>5.9.0</version>
+        <version>5.9.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
