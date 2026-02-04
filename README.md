@@ -12,8 +12,8 @@ A command-line utility, [ncISO], is also available ([here][ncISO]) for automatin
 Much has changed with the `main` branch.
 The repository currently produces two artifacts of interest:
 
-1. [nciso](https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-all/EDS/nciso/)
-2. [tds-plugin](https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-all/EDS/tds-plugin/)
+1. nciso ([releases](https://artifacts.unidata.ucar.edu/releases/EDS/nciso/))([snapshots](https://artifacts.unidata.ucar.edu/snapshots/EDS/nciso/))
+2. tds-plugin ([releases](https://artifacts.unidata.ucar.edu/releases/EDS/tds-plugin/))([snapshots](https://artifacts.unidata.ucar.edu/snapshots/EDS/tds-plugin/))
 
 An attempt has been made to combine the code bases of the command line utility and the TDS threddsISO plugin.
 In this repository, the commandline utility code lives in the `nciso` maven module.
@@ -29,7 +29,6 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 | netCDF-Java / TDS Version | threddsISO     | threddsISO Tag |
 |:--------------------------|:---------------|:---------------|
-| 5.9.1 / -                 | 2.4.9-SNAPSHOT | -              |
 | 5.9.1 / 5.7               | 2.4.8          | **v2.4.8**     |
 | 5.7.0 / 5.6               | 2.4.7          | **v2.4.7**     |
 | 5.6.0 / 5.5               | 2.4.6          | **v2.4.6**     |
@@ -55,10 +54,10 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 ### Active Branches
 
-| threddsIso branch | netCDF-Java / TDS Version         |
-|:------------------|:----------------------------------|
-| main              | **5.5.4-SNAPSHOT / 5.5-SNAPSHOT** |
-| 2.2.x             | **4.6.17**                        |
+| threddsIso branch | netCDF-Java / TDS Version          |
+|:------------------|:-----------------------------------|
+| main              | **5.10.0-SNAPSHOT / 5.9-SNAPSHOT** |
+| 2.2.x             | **4.6.17**                         |
 
 ## Notes on External Dependencies
 
@@ -69,12 +68,12 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 [commons-lang3] used in `nciso-common`
 
 [ncISO]: https://github.com/NOAA-PMEL/uafnciso
-[TDS]: http://www.unidata.ucar.edu/software/tds/current/
+[TDS]: https://www.unidata.ucar.edu/software/tds
 [ncISO_TDS_docs]: https://docs.unidata.ucar.edu/tds/current/userguide/iso_metadata.html
 
-[Maven_artifacts]: https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-releases/EDS/
-[Maven_artifacts_snapshots]: https://artifacts.unidata.ucar.edu/service/rest/repository/browse/unidata-snapshots/EDS/
+[Maven_artifacts]: https://artifacts.unidata.ucar.edu/releases/EDS/
+[Maven_artifacts_snapshots]: https://artifacts.unidata.ucar.edu/snapshots/EDS/
 
-[JDOM]: http://www.jdom.org/
-[SAXON]: http://saxon.sourceforge.net/
-[commons-lang]: http://commons.apache.org/proper/commons-lang/
+[JDOM]: https://www.jdom.org/
+[SAXON]: https://saxon.sourceforge.net/
+[commons-lang]: https://commons.apache.org/proper/commons-lang/
