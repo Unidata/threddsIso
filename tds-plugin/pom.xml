@@ -49,7 +49,6 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>tds</artifactId>
-      <classifier>classes</classifier>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
