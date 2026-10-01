@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2023-2026 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -15,8 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.testcontainers.containers.GenericContainer;
@@ -39,8 +39,7 @@ public class NcIsoIT {
       DockerImageName.parse("unidata/thredds-docker:" + getTdsVersion());
   private static String basePath;
 
-  @ClassRule
-  public static final GenericContainer<?> tds = new GenericContainer<>(dockerImageName)
+  private static final GenericContainer<?> tds = new GenericContainer<>(dockerImageName)
       .withExposedPorts(8080)
       .withCopyFileToContainer(MountableFile.forClasspathResource("/thredds/catalog.xml"),
           "/usr/local/tomcat/content/thredds/catalog.xml")
@@ -56,11 +55,17 @@ public class NcIsoIT {
 
   @BeforeClass
   public static void setUp() throws IOException, InterruptedException {
+    tds.start();
     final String address = tds.getHost();
     final Integer port = tds.getFirstMappedPort();
     basePath = "http://" + address + ":" + port + "/thredds/";
     // remove bundled tds-plugin classes from the classpath
     tds.execInContainer("rm", "-rf", "/usr/local/tomcat/webapps/thredds/WEB-INF/classes/thredds/server/metadata");
+  }
+
+  @AfterClass
+  public static void tearDown() {
+    tds.stop();
   }
 
   @Test
