@@ -21,9 +21,7 @@ public class TestServiceController {
 
   @Test
   public void basicTest() throws IOException {
-    // from https://github.com/NOAA-PMEL/uafnciso
-    //  -ts https://ferret.pmel.noaa.gov/pmel/thredds/carbontracker.xml -num 1 -depth 20 -iso true
-    String url = "-ts https://ferret.pmel.noaa.gov/pmel/thredds/carbontracker.xml";
+    String url = "-ts https://thredds.ucar.edu/thredds/catalog/casestudies/harvey/model/gfs_ana/catalog.xml";
     String num = "-num 1";
     String depth = "-depth 20";
     String iso = "-iso true";
