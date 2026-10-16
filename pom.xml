@@ -4,7 +4,7 @@
   <groupId>EDS</groupId>
   <artifactId>threddsIso-parent</artifactId>
   <packaging>pom</packaging>
-  <version>2.4.10-SNAPSHOT</version>
+  <version>${revision}</version>
   <scm>
     <developerConnection>scm:git:https://github.com/Unidata/threddsIso.git</developerConnection>
   </scm>
@@ -204,6 +204,31 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -216,6 +241,8 @@
     </resources>
   </build>
   <properties>
+    <revision>2.4.11-SNAPSHOT</revision>
+
     <!-- default is to skip tests. use mvn test -DskipTests=false to override on command line -->
     <skipTests>true</skipTests>
 

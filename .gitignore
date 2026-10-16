@@ -1,5 +1,6 @@
 # Ignore all target directories
 target/
+.flattened-pom.xml
 
 # Ignore unwanted IntelliJ IDEA project files
 /intelliJ/
@@ -8,6 +9,7 @@ target/
 *.iml
 *.iws
 .idea/
+.junie/
 out/
 lib/
 atlassian-ide-plugin.xml

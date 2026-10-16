@@ -3,7 +3,7 @@
 This is the main threddsISO code repository.
 threddsISO provides the NcML, ISO 19115, and metadata rubric services that can be used with the THREDDS Data Server ([TDS]).
 The code in this repository is used to build the [threddsIso artifacts][Maven_artifacts] ([snapshots][Maven_artifacts_snapshots]).
-The threddsISO plugin is no longer distributed with the TDS by default, however, it is easy add it to your TDS (see documentation [here][ncISO_TDS_docs]).
+JDK >=17 and Maven >=3.5.0 are required to build the project.
 
 This code is maintained and advanced by developers at NOAA/NGDC and at Unidata along with many contributions from the community of users.
 
@@ -21,7 +21,22 @@ The TDS plugin code lives in the `tds-plugin` maven module.
 Common code and resources live in the `nciso-common` maven module.
 The commandline utility jar built from this repository can be downloaded from the `nciso` artifacts (they use the classifier `commandline`, e.g. `nciso-2.4.0-commandline.jar`).
 
-The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the larger ncISO/threddsISO community) to maintained and advance the project.
+The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the larger ncISO/threddsISO community) to maintain and advance the project.
+
+## Build and Test
+
+Maven 3.5.0 (or greater) and JDK 17 (or greater) are required to build and test the project.
+To build the project using maven, run:
+
+```sh
+mvn clean package
+```
+
+To execute the tests (which are skipped by default), run:
+
+```sh
+mvn test -DskipTests=false
+```
 
 ## Versions, Tags, and Branches
 
@@ -29,6 +44,7 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 | netCDF-Java / TDS Version | threddsISO | threddsISO Tag |
 |:--------------------------|:-----------|:---------------|
+| 5.11.0 / 5.10             | 2.4.10     | **v2.4.10**    |
 | 5.10.0 / 5.9              | 2.4.9      | **v2.4.9**     |
 | 5.9.1 / 5.7               | 2.4.8      | **v2.4.8**     |
 | 5.7.0 / 5.6               | 2.4.7      | **v2.4.7**     |
@@ -55,10 +71,10 @@ The NOAA/NGDC ncISO team and the Unidata THREDDS team work closely (and with the
 
 ### Active Branches
 
-| threddsIso branch | netCDF-Java / TDS Version   |
-|:------------------|:----------------------------|
-| main              | **5.11.0 / 5.10-SNAPSHOT**  |
-| 2.2.x             | **4.6.17**                  |
+| threddsIso branch | threddsIso Version | netCDF-Java / TDS Version  |
+|:------------------|:-------------------|:---------------------------|
+| main              | 2.4.11-SNAPSHOT    | **5.11.0 / 5.10-SNAPSHOT** |
+| 2.2.x             | 2.2.20-SNAPSHOT    | **4.6.17**                 |
 
 ## Notes on External Dependencies
 
