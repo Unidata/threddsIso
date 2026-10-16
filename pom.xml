@@ -241,7 +241,7 @@
     </resources>
   </build>
   <properties>
-    <revision>2.4.10</revision>
+    <revision>2.4.11-SNAPSHOT</revision>
 
     <!-- default is to skip tests. use mvn test -DskipTests=false to override on command line -->
     <skipTests>true</skipTests>

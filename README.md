@@ -71,10 +71,10 @@ mvn test -DskipTests=false
 
 ### Active Branches
 
-| threddsIso branch | netCDF-Java / TDS Version   |
-|:------------------|:----------------------------|
-| main              | **5.11.0 / 5.10-SNAPSHOT**  |
-| 2.2.x             | **4.6.17**                  |
+| threddsIso branch | threddsIso Version | netCDF-Java / TDS Version  |
+|:------------------|:-------------------|:---------------------------|
+| main              | 2.4.11-SNAPSHOT    | **5.11.0 / 5.10-SNAPSHOT** |
+| 2.2.x             | 2.2.20-SNAPSHOT    | **4.6.17**                 |
 
 ## Notes on External Dependencies
 
